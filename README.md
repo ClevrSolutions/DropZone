@@ -1,11 +1,9 @@
 
 
->| **Name**             | Dropzone        |
->|----------------------|-----------------|
->| **Author**           | Chris de Gelder |
->| **Type**             | Widget          |
->| **Latest Version**   | 1.2             |
->| **Package filename** | Dropzone.mpk    |
+**Dropzone**
+--------------
+
+*Chris de Gelder - 12/17/2015*
 
  
 **Description**
@@ -46,6 +44,8 @@
 
 -   Remove caption. If loaded this will be displayed on the icon
 
+**Bug fixes**
+Files can no longer be uploaded twice.
 
 **Known bugs**
 
