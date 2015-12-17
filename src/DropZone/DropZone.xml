@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="DropZone.widget.DropZone" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
+	<name>DropZone</name>
+	<description>DropZone</description>
+
+	<icon>
+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
+	</icon>
+
+	<properties>
+		<property key="imageentity" type="entity">
+			<caption>Image entity</caption>
+			<category>Data</category>
+			<description></description>
+		</property>
+		<property key="nameattr" type="attribute" required="true">
+			<caption>Name attribute</caption>
+			<category>Data</category>
+			<description>Attribute for name of the file, normally 'name'</description> 
+			<attributeTypes>
+				<attributeType name="String"/> 
+			</attributeTypes>
+		</property>		
+		<property key="typeattr" type="attribute" required="false" entityProperty="imageentity">
+			<caption>Type attribute</caption>
+			<category>Data</category>
+			<description>Attribute for the filetype, it is not required, it can be used to filter data in the on accept microflow. Values are like 'image/jpeg'</description> 
+			<attributeTypes>
+				<attributeType name="String"/> 
+			</attributeTypes>
+		</property>		
+		<property key="sizeattr" type="attribute" required="false" entityProperty="imageentity">
+			<caption>Size attribute</caption>
+			<category>Data</category>
+			<description>Attribute for the size, not required, can be used to filter data in onAccept.</description> 
+			<attributeTypes>
+				<attributeType name="Integer"/> 
+				<attributeType name="Long"/> 
+			</attributeTypes>
+		</property>			
+		<property key="contextassociation" type="entity" entityProperty="imageentity" isPath="yes" pathType="reference" required="false">
+			<caption>Association to context</caption>
+			<category>Data</category>
+			<description>If provided used to set the association of new images to the context. Should be a path to the context.</description>
+		</property>		
+		<property key="maxFileSize" type="integer" defaultValue="5">
+			<caption>maxFileSize</caption>
+			<category>Settings</category>
+			<description>Maximum file size in MB</description>
+		</property>
+		<property key="panelheight" type="integer" defaultValue="200">
+			<caption>Height</caption>
+			<category>Settings</category>
+			<description>Height of the panel</description>
+		</property>		
+		<property key="panelwidth" type="integer" defaultValue="500">
+			<caption>Width</caption>
+			<category>Settings</category>
+			<description>Width of the panel</description>
+		</property>		
+		<property key="buttoncaption" type="translatableString" required="false">
+			<caption>Button caption</caption>
+			<category>Settings</category>
+			<description>Caption of the upload button.</description>
+		</property>		
+		<property key="removecaption" type="translatableString" required="false">
+			<caption>Remove caption</caption>
+			<category>Settings</category>
+			<description>Caption of the remove button.</description>
+		</property>		
+		<property key="rejectcaption" type="translatableString" required="false">
+			<caption>Reject caption</caption>
+			<category>Settings</category>
+			<description>Added to the image when the on accept microflow returns false.</description>
+		</property>	
+        <property key="onChangemf" type="microflow" required="false" entityProperty="imageentity">
+            <caption>On change</caption>
+            <category>Events</category>
+            <description>Microflow to trigger on change.</description>
+            <returnType type="Boolean"/>
+        </property>	
+        <property key="onAccept" type="microflow" required="false" entityProperty="imageentity">
+            <caption>On accept</caption>
+            <category>Events</category>
+            <description>Microflow to trigger on dropping or selecting a file. Should return true to accept or false to reject.</description>
+            <returnType type="Boolean"/>
+        </property>	
+        <property key="onRemove" type="microflow" required="false" entityProperty="imageentity">
+            <caption>On remove</caption>
+            <category>Events</category>
+            <description>Microflow is called when an uploaded file is removed. You should remove the object yourself.</description>
+            <returnType type="Boolean"/>
+        </property>			
+	</properties>
+</widget>
