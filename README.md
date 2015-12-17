@@ -3,8 +3,7 @@
 **Dropzone**
 --------------
 
-*Chris de Gelder - 12/17/2015*
-
+Mendix implementation of the DropZone widget.
  
 **Description**
 
