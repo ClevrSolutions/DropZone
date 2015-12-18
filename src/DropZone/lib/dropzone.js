@@ -1,5 +1,4 @@
-dojo.provide("DropZone.widget.lib.dropzone");
-;(function(){
+(function(){
 
 /**
  * Require the given path.
