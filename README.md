@@ -35,16 +35,14 @@ Mendix implementation of the DropZone widget.
 
 -   On accept: when an image is uploaded this is called. Return true to accept a file, false to reject.
 
--   On remove: when an file is uploaded and after that deleted, this microflow is called an should delete it.
+-   On remove: when a file is uploaded and then deleted, this microflow is called an should delete the filedocument.
 
--   maxFileSize: Maximum file size MB
+-   maxFileSize: Maximum file size in MB
 
 -   Button caption: Text on the upload button (can be translated).
 
 -   Remove caption. If loaded this will be displayed on the icon
 
-**Bug fixes**
-Files can no longer be uploaded twice.
 
 **Known bugs**
 
@@ -61,4 +59,5 @@ Ask your question at the Mendix Community [*Forum*](https://mxforum.mendix.com/)
  
 
 -   None
+-   
 > Written with [StackEdit](https://stackedit.io/).
