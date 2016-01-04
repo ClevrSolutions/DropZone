@@ -15,7 +15,7 @@ Mendix implementation of the DropZone widget.
 
 **Dependencies**
 
- Mendix 5.x
+ Mendix 6.x
 
 **Configuration**
 
