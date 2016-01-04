@@ -10,9 +10,10 @@ define([
     "dijit/_TemplatedMixin",
     "dojo/_base/array",
     "dojo/_base/lang",
-	"widgets/DropZone/widget/lib/dropzone"
-], function(declare, _WidgetBase, _TemplatedMixin, dojoArray, dojoLang, Dropzone) {
+	"DropZone/widget/lib/dropzone"
+], function(declare, _WidgetBase, _TemplatedMixin, dojoArray, dojoLang, _Dropzone) {
     "use strict";
+	console.log('dz', _Dropzone);
 
     // Declare widget's prototype.
     return declare("DropZone.widget.DropZone", [ _WidgetBase], {
@@ -55,9 +56,9 @@ define([
 				"class" : 'dropzone',
 				style : 'height: ' + this.panelheight + 'px; width: ' + this.panelwidth + 'px; background-color: gray;'
 			}));
-			window.Dropzone.autoDiscover = false;
-			window.Dropzone.maxFilesize = this.maxFileSize;
-			this.myDropzone = new window.Dropzone("#" + this.id + '_zone', {
+			Dropzone.autoDiscover = false;
+			Dropzone.maxFilesize = this.maxFileSize;
+			this.myDropzone = new Dropzone("#" + this.id + '_zone', {
 				url : "/file?fileID=4&maxFileSize=5", // dummy file id
 				paramName : 'mxdocument',
 				autoProcessQueue : false,
