@@ -13,7 +13,7 @@ iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAN30lEQVR42u1Ze3AV1Rn/zu5935uE8EYC
 			<category>Data</category>
 			<description></description>
 		</property>
-		<property key="nameattr" type="attribute" required="true">
+		<property key="nameattr" type="attribute" required="true" entityProperty="imageentity">
 			<caption>Name attribute</caption>
 			<category>Data</category>
 			<description>Attribute for name of the file, normally 'name'</description> 
