@@ -1,7 +1,4 @@
-/*jslint browser: true, devel:true, nomen:true, unparam:true, regexp: true*/
-/*global define, require, mxui, mx, mendix, Dropzone, logger*/
-
-/*
+/**
     DropZone
     ========================
     @file      : Dropzone.js
@@ -22,7 +19,16 @@
     - test fallback, scenario
 
  */
+/*jslint browser: true, devel:true, nomen:true, unparam:true, regexp: true*/
+/*global define, require, mxui, mx, mendix, Dropzone, logger*/
 
+/**
+@file      : Dropzone.js
+@version   : 3.1.0
+@author    : Andries Smit & Chris de Gelder
+@date      : 14-07-2016
+@license   : Apache V2
+ */
 define([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
@@ -33,6 +39,7 @@ define([
     "use strict";
 
     // Declare widget's prototype.
+    /** @module {MendixWidget} DropZone.widget.DropZone */
     return declare("DropZone.widget.DropZone", [_WidgetBase], {
         maxFileSize: 0,
         imageentity: "",
@@ -46,25 +53,40 @@ define([
         parallelUploads: 4,
         _contextObj: null,
         
-        // dojo.declare.constructor is called to construct the widget instance. Implement to initialize non-primitive properties.
+        /**
+         * dojo.declare.constructor is called to construct the widget instance. Implement to initialize non-primitive properties.
+         * @public
+         * @returns {undefined}
+         */
         constructor: function () {
             logger.debug(this.id + ".constructor");
             this.dropzone = null;
             this._contextObj = null;
-        },        
-        // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
+        },
+        /**
+         * dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
+         * @returns {undefined}
+         */
         postCreate: function () {
             logger.debug(this.id + ".postCreate");
             this.initDropZone();
         },
-
-        // mxui.widget._WidgetBase.update is called when context is changed or initialized. Implement to re-render and / or fetch data.
+        /**
+         * mxui.widget._WidgetBase.update is called when context is changed or initialized. Implement to re-render and / or fetch data.
+         * @param {mendix/lib/MxObject} obj - the current track object, or null if there is none
+         * @param {mxui/widget/_WidgetBase~ApplyContextCallback} callback - function to be called when finished
+         * @returns {undefined}
+         */
         update: function (obj, callback) {
             logger.debug(this.id + ".update");
             this._contextObj = obj;
             mendix.lang.nullExec(callback);
         },
-        // initalize the dropzone library. 
+        /**
+         * initalize the dropzone library. 
+         * @private
+         * @returns {undefined}
+         */
         initDropZone: function () {
             logger.debug(this.id + ".initDropZone");
             domConstruct.empty(this.domNode);
@@ -96,17 +118,31 @@ define([
             this.dropzone.on("error", dojoLang.hitch(this, this.onError));
             this.dropzone.on("removedfile", dojoLang.hitch(this, this.onRemoveFile));
         },
-        // set the Mendix upload URL based on the GUID
+        /**
+         * set the Mendix upload URL based on the GUID
+         * @param {file[]} files
+         * @returns {String} url - mendix server URL to post the file to.s 
+         */
         getMendixURL: function (files) {
             logger.debug(this.id + ".getMendixURL");
             return "/file?guid=" + files[0].obj.getGuid() + "&maxFileSize=" + this.maxFileSize + "&csrfToken=" + mx.session.getCSRFToken() + "&height=75&width=100";
         },
-        // on error remove the files.
+        /**
+         * on error remove the files.
+         * @param {type} file - upload files
+         * @param {type} message - error message
+         * @returns {undefined}
+         */
         onError: function (file, message) {
             logger.error(this.id + ".onError", message);
             this.onRemoveFile(file);
-        },        
-        // an image should be removed from within a microflow, if there is non just delete if via the api
+        }, 
+        /**
+         * an image should be removed from within a microflow, if there is non just delete if via the api
+         * @param {type} file - the file that is removed from the list.
+         * @param {type} message - status message
+         * @returns {undefined}
+         */
         onRemoveFile: function (file, message) {
             if (this._beingDestroyed) {
                 // dont remove the files when the widget is being destroyed by the uninitialize function.
@@ -135,7 +171,12 @@ define([
                 this.removeFile(file);
             }
         },
-        // when uploadload is completed, commit and call onchange MF
+        /**
+         * when uploadload is completed, commit and call onchange MF
+         * @param {type} file - the file that is completed
+         * @param {type} message - status message
+         * @returns {undefined}
+         */
         onComplete: function (file, message) {
             logger.debug(this.id + ".onComplete");
             if (file.obj) {
@@ -148,13 +189,23 @@ define([
                 });
             }
         },
-        // Create file on mendix server, and validate if it could be accepted.
+        /**
+         * Create file on mendix server, and validate if it could be accepted.
+         * @param {File} file - the file that validate
+         * @param {function} callback - callback function an acceptance.
+         * @returns {undefined}
+         */
         accept: function (file, callback) {
             this.createMendixFile(file, dojoLang.hitch(this, function () {
                 this.acceptMendix(file, callback);
             }));
         },
-        // Validate if object will be accepted by the mendix server
+        /**
+         * Validate if object will be accepted by the mendix server
+         * @param {File} file - file to be send to server
+         * @param {function} callback - callback function on completion
+         * @returns {undefined}
+         */
         acceptMendix: function (file, callback) {
             logger.debug(this.id + ".accept");
             var rejectcaption = this.rejectcaption || "rejected";
@@ -182,8 +233,14 @@ define([
             } else {
                 callback();
             }
-        },        
-        // create a mendix file on the server when new upload item is added.
+        },
+        /**
+         * Create a mendix empty file object on the server when new upload item is added.
+         * Upload of the file be done by the DropZoneJs lib
+         * @param {File} file - file that needs te be upladed
+         * @param {function} callback
+         * @returns {undefined}
+         */
         createMendixFile: function (file, callback) {
             logger.debug(this.id + ".createMendixFile");
             mx.data.create({
@@ -209,7 +266,11 @@ define([
                 }
             });
         },
-        // remove file directly via the client API.
+        /**
+         * Remove file directly via the client API.
+         * @param {File} file - file that needs to be removed.
+         * @returns {undefined}
+         */
         removeFile: function (file) {
             logger.debug(this.id + ".removeFile");
             if (file.obj) {
@@ -224,12 +285,19 @@ define([
                 });
             }
         },
-        // on click of the upload button start processing the upload queue
+        /**
+         * on click of the upload button start processing the upload queue
+         * @returns {undefined}
+         */
         onclickEvent: function () {
             logger.debug(this.id + ".onclickEvent");
             this.dropzone.processQueue();
         },
-        // call onchange Miroflow if any. 
+        /**
+         * Call onchange Miroflow if any. 
+         * @param {mendix/lib/MxObject} obj
+         * @returns {undefined}
+         */
         callOnChange: function (obj) {
             logger.debug(this.id + ".callOnChange");
             if (obj && this.onChangemf) {
@@ -251,8 +319,11 @@ define([
                 });
             }
         },
-        // mxui.widget._WidgetBase.uninitialize is called when the widget is destroyed. Implement to do special tear-down work.
-        // Clean up listeners, helper objects, etc. There is no need to remove listeners added with this.connect / this.subscribe / this.own.
+        /**
+         * mxui.widget._WidgetBase.uninitialize is called when the widget is destroyed. Implement to do special tear-down work.
+         * Clean up listeners, helper objects, etc. There is no need to remove listeners added with this.connect / this.subscribe / this.own.
+         * @returns {undefined}
+         */
         uninitialize: function () {
             logger.debug(this.id + ".uninitialize");
             if (this.dropzone) {
