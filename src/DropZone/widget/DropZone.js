@@ -3,7 +3,7 @@
 
 */
 
-mxui.dom.addCss('widgets/Dropzone/widget/css/dropzone.css');
+mxui.dom.addCss('widgets/DropZone/widget/css/dropzone.css');
 define([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
