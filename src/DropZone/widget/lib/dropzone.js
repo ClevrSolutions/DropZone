@@ -1,4 +1,3 @@
-dojo.provide("DropZone.widget.lib.dropzone");
 ;(function(){
 
 /**

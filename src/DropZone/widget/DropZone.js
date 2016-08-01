@@ -13,7 +13,6 @@ define([
 	"DropZone/widget/lib/dropzone"
 ], function(declare, _WidgetBase, _TemplatedMixin, dojoArray, dojoLang, _Dropzone) {
     "use strict";
-	console.log('dz', _Dropzone);
 
     // Declare widget's prototype.
     return declare("DropZone.widget.DropZone", [ _WidgetBase], {
@@ -53,7 +52,7 @@ define([
 			//this.uploadButton.hideIcon();
 			this.domNode.appendChild(mxui.dom.div({
 				id : this.id + '_zone',
-				"class" : 'dropzone',
+				"class" : 'dropzone needsclick dz-clickable',
 				style : 'height: ' + this.panelheight + 'px; width: ' + this.panelwidth + 'px; background-color: gray;'
 			}));
 			Dropzone.autoDiscover = false;
@@ -140,6 +139,17 @@ define([
 					},
 					callback : dojoLang.hitch(this, function (result) {
 						if (!result) {
+							// remove the created object to prevent autocommitted errors in the mendix console
+							mx.data.rollback({
+								mxobj: file.obj,
+								callback: function() {
+									//console.log("The object was rolled back");
+								},
+								error: function(e) {
+									console.log("Error occured attempting to rollback: " + e);
+								} 
+							});
+							file.obj = null; 
 							callback(rejectcaption);
 						} else {
 							callback();
