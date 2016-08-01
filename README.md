@@ -8,6 +8,10 @@ Mendix implementation of the DropZone widget.
 **Description**
 
  Upload multiple images or filedocuments on a canvas an upload them together. All processed files are marked with a tick-box, errors with a red cross.
+ 
+**History**
+
+Update 3.0.2: css loading on linux and Mendix cloud
 
 **Typical usage scenario**
 
