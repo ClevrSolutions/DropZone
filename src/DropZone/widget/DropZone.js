@@ -1,4 +1,7 @@
-/**
+/*jslint browser: true, devel:true, nomen:true, unparam:true, regexp: true*/
+/*global define, require, mxui, mx, mendix, Dropzone, logger*/
+
+/*
     DropZone
     ========================
     @file      : Dropzone.js
@@ -18,16 +21,6 @@
     - add modeler parameters for caption of the remove, cancel button and cancel quesiton.
     - test fallback, scenario
 
- */
-/*jslint browser: true, devel:true, nomen:true, unparam:true, regexp: true*/
-/*global define, require, mxui, mx, mendix, Dropzone, logger*/
-
-/**
-@file      : Dropzone.js
-@version   : 3.1.0
-@author    : Andries Smit & Chris de Gelder
-@date      : 14-07-2016
-@license   : Apache V2
  */
 define([
     "dojo/_base/declare",
@@ -52,7 +45,7 @@ define([
         dropzone: null,
         parallelUploads: 4,
         _contextObj: null,
-        
+
         /**
          * dojo.declare.constructor is called to construct the widget instance. Implement to initialize non-primitive properties.
          * @public
@@ -136,7 +129,7 @@ define([
         onError: function (file, message) {
             logger.error(this.id + ".onError", message);
             this.onRemoveFile(file);
-        }, 
+        },
         /**
          * an image should be removed from within a microflow, if there is non just delete if via the api
          * @param {type} file - the file that is removed from the list.
@@ -148,7 +141,7 @@ define([
                 // dont remove the files when the widget is being destroyed by the uninitialize function.
                 return;
             }
-            logger.debug(this.id + ".onRemoveFile");            
+            logger.debug(this.id + ".onRemoveFile");
             var obj = file.obj;
             if (obj && this.onRemove) {
                 mx.data.action({
@@ -277,6 +270,7 @@ define([
                 mx.data.remove({
                     guid: file.obj.getGuid(),
                     callback: function () {
+                        mx.data.sendClassUpdate(file.obj.getEntity());
                         file.obj = null;
                     },
                     error: function (err) {
