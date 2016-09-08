@@ -77,7 +77,7 @@
             <description>The message that gets displayed before any files are dropped.</description>            
             <translations>
                 <translation lang="en_US">Click here, or drop files here to upload.</translation>
-                <translation lang="nl_NL">Klick hier, of sleep bestandere hierheen om te uploaden.</translation>
+                <translation lang="nl_NL">Klik hier, of sleep bestanden hierheen om te uploaden.</translation>
             </translations>
         </property>
         <property key="onChangemf" type="microflow" required="false" entityProperty="imageentity">

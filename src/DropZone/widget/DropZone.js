@@ -181,6 +181,9 @@ define([
                     })
                 });
             }
+            if (!this.autoUpload) {
+				this.dropzone.processQueue(); 
+			}
         },
         /**
          * Create file on mendix server, and validate if it could be accepted.
