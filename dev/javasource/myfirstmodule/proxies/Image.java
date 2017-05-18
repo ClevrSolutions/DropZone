@@ -61,7 +61,7 @@ public class Image extends system.proxies.Image
 
 	/**
 	 * Initialize a proxy using context (recommended). This context will be used for security checking when the get- and set-methods without context parameters are called.
-	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.getSudoContext() can be used to obtain sudo access).
+	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.createSudoClone() can be used to obtain sudo access).
 	 */
 	public static myfirstmodule.proxies.Image initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
@@ -85,7 +85,7 @@ public class Image extends system.proxies.Image
 	/**
 	 * @return value of FileType
 	 */
-	public final String getFileType()
+	public final java.lang.String getFileType()
 	{
 		return getFileType(getContext());
 	}
@@ -94,16 +94,16 @@ public class Image extends system.proxies.Image
 	 * @param context
 	 * @return value of FileType
 	 */
-	public final String getFileType(com.mendix.systemwideinterfaces.core.IContext context)
+	public final java.lang.String getFileType(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		return (String) getMendixObject().getValue(context, MemberNames.FileType.toString());
+		return (java.lang.String) getMendixObject().getValue(context, MemberNames.FileType.toString());
 	}
 
 	/**
 	 * Set value of FileType
 	 * @param filetype
 	 */
-	public final void setFileType(String filetype)
+	public final void setFileType(java.lang.String filetype)
 	{
 		setFileType(getContext(), filetype);
 	}
@@ -113,7 +113,7 @@ public class Image extends system.proxies.Image
 	 * @param context
 	 * @param filetype
 	 */
-	public final void setFileType(com.mendix.systemwideinterfaces.core.IContext context, String filetype)
+	public final void setFileType(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String filetype)
 	{
 		getMendixObject().setValue(context, MemberNames.FileType.toString(), filetype);
 	}

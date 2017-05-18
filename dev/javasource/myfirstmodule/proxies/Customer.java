@@ -66,7 +66,7 @@ public class Customer
 
 	/**
 	 * Initialize a proxy using context (recommended). This context will be used for security checking when the get- and set-methods without context parameters are called.
-	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.getSudoContext() can be used to obtain sudo access).
+	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.createSudoClone() can be used to obtain sudo access).
 	 */
 	public static myfirstmodule.proxies.Customer initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
@@ -121,7 +121,7 @@ public class Customer
 	/**
 	 * @return value of Name
 	 */
-	public final String getName()
+	public final java.lang.String getName()
 	{
 		return getName(getContext());
 	}
@@ -130,16 +130,16 @@ public class Customer
 	 * @param context
 	 * @return value of Name
 	 */
-	public final String getName(com.mendix.systemwideinterfaces.core.IContext context)
+	public final java.lang.String getName(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		return (String) getMendixObject().getValue(context, MemberNames.Name.toString());
+		return (java.lang.String) getMendixObject().getValue(context, MemberNames.Name.toString());
 	}
 
 	/**
 	 * Set value of Name
 	 * @param name
 	 */
-	public final void setName(String name)
+	public final void setName(java.lang.String name)
 	{
 		setName(getContext(), name);
 	}
@@ -149,7 +149,7 @@ public class Customer
 	 * @param context
 	 * @param name
 	 */
-	public final void setName(com.mendix.systemwideinterfaces.core.IContext context, String name)
+	public final void setName(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String name)
 	{
 		getMendixObject().setValue(context, MemberNames.Name.toString(), name);
 	}
@@ -193,7 +193,7 @@ public class Customer
 	/**
 	 * @return value of Size
 	 */
-	public final Integer getSize()
+	public final java.lang.Integer getSize()
 	{
 		return getSize(getContext());
 	}
@@ -202,16 +202,16 @@ public class Customer
 	 * @param context
 	 * @return value of Size
 	 */
-	public final Integer getSize(com.mendix.systemwideinterfaces.core.IContext context)
+	public final java.lang.Integer getSize(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		return (Integer) getMendixObject().getValue(context, MemberNames.Size.toString());
+		return (java.lang.Integer) getMendixObject().getValue(context, MemberNames.Size.toString());
 	}
 
 	/**
 	 * Set value of Size
 	 * @param size
 	 */
-	public final void setSize(Integer size)
+	public final void setSize(java.lang.Integer size)
 	{
 		setSize(getContext(), size);
 	}
@@ -221,7 +221,7 @@ public class Customer
 	 * @param context
 	 * @param size
 	 */
-	public final void setSize(com.mendix.systemwideinterfaces.core.IContext context, Integer size)
+	public final void setSize(com.mendix.systemwideinterfaces.core.IContext context, java.lang.Integer size)
 	{
 		getMendixObject().setValue(context, MemberNames.Size.toString(), size);
 	}
@@ -229,7 +229,7 @@ public class Customer
 	/**
 	 * @return value of Filetype
 	 */
-	public final String getFiletype()
+	public final java.lang.String getFiletype()
 	{
 		return getFiletype(getContext());
 	}
@@ -238,16 +238,16 @@ public class Customer
 	 * @param context
 	 * @return value of Filetype
 	 */
-	public final String getFiletype(com.mendix.systemwideinterfaces.core.IContext context)
+	public final java.lang.String getFiletype(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		return (String) getMendixObject().getValue(context, MemberNames.Filetype.toString());
+		return (java.lang.String) getMendixObject().getValue(context, MemberNames.Filetype.toString());
 	}
 
 	/**
 	 * Set value of Filetype
 	 * @param filetype
 	 */
-	public final void setFiletype(String filetype)
+	public final void setFiletype(java.lang.String filetype)
 	{
 		setFiletype(getContext(), filetype);
 	}
@@ -257,7 +257,7 @@ public class Customer
 	 * @param context
 	 * @param filetype
 	 */
-	public final void setFiletype(com.mendix.systemwideinterfaces.core.IContext context, String filetype)
+	public final void setFiletype(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String filetype)
 	{
 		getMendixObject().setValue(context, MemberNames.Filetype.toString(), filetype);
 	}

@@ -20,3 +20,4 @@ node_modules/
 nbproject
 dev/deployment/data/database/*_commands.sql
 dev/deployment
+test6x/

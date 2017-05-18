@@ -56,7 +56,12 @@
             <category>Settings</category>
             <description>Width of the panel</description>
         </property>
-        <property key="buttoncaption" type="translatableString" required="false">
+        <property key="autosize" type="boolean" defaultValue="false">
+            <caption>Autosize</caption>
+            <category>Settings</category>
+            <description>When documents are dropped the panel is sized.</description>
+        </property>        
+		<property key="buttoncaption" type="translatableString" required="false">
             <caption>Button caption</caption>
             <category>Display</category>
             <description>Caption of the upload button.</description>

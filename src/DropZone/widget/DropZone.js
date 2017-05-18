@@ -5,14 +5,15 @@
     DropZone
     ========================
     @file      : Dropzone.js
-    @version   : 3.1.0
+    @version   : 4.0.0
     @author    : Andries Smit & Chris de Gelder
-    @date      : 14-07-2016
+    @date      : 13-03-2017
     @license   : Apache V2
 
     Documentation
     ========================
-    Drop multiple images or documents and upload
+    Drop multiple images or documents and upload.
+	Mendix 7.x version.
 
     
     To be done:
@@ -26,9 +27,10 @@ define([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
     "dojo/dom-construct",
+	"dojo/on",
     "dojo/_base/lang",
     "DropZone/widget/lib/dropzone"
-], function (declare, _WidgetBase, domConstruct, dojoLang, Dropzone) {
+], function (declare, _WidgetBase, domConstruct, on, dojoLang, Constructdropzone) {
     "use strict";
 
     // Declare widget's prototype.
@@ -44,6 +46,7 @@ define([
         uploadButton: null,
         dropzone: null,
         parallelUploads: 4,
+		currentParallelUploads: 0,
         _contextObj: null,
 
         /**
@@ -53,6 +56,7 @@ define([
          */
         constructor: function () {
             logger.debug(this.id + ".constructor");
+			logger.debug('dropzone', Constructdropzone);
             this.dropzone = null;
             this._contextObj = null;
         },
@@ -63,6 +67,7 @@ define([
         postCreate: function () {
             logger.debug(this.id + ".postCreate");
             this.initDropZone();
+			logger.debug('this', this);
         },
         /**
          * mxui.widget._WidgetBase.update is called when context is changed or initialized. Implement to re-render and / or fetch data.
@@ -84,41 +89,68 @@ define([
             logger.debug(this.id + ".initDropZone");
             domConstruct.empty(this.domNode);
             if (!this.autoUpload) {
-                this.uploadButton = new mxui.widget._Button({
-                    caption: this.buttoncaption,
-                    onClick: dojoLang.hitch(this, this.onclickEvent),
+                this.uploadButton = new mxui.dom.create('Button', {
+					type: 'button', 
+					class: 'btn mx-button btn-default', 
                     icon: "mxclientsystem/mxui/widget/styles/images/MxFileInput/uploading.gif"
                 });
-                this.domNode.appendChild(this.uploadButton.domNode);
+				this.uploadButton.innerHTML = this.buttoncaption;
+				on(this.uploadButton, "click", dojoLang.hitch(this, this.onclickEvent));
+				logger.debug("button", this.uploadButton, this.buttonCaption);
+                this.domNode.appendChild(this.uploadButton);
             }
-            this.domNode.appendChild(mxui.dom.div({
+			var height = this.panelheight + " px";
+			var width = this.panelwidth  + " px";
+			if (this.autosize) {
+				height = "100%";
+				width = "100%";
+			}
+            this.domNode.appendChild(mxui.dom.create("div", {
                 "id": this.id + "_zone",
                 "class": "dropzone",
-                "style": "height: " + this.panelheight + "px; width: " + this.panelwidth + "px;"
+                "style": "height: " + height + "; width: " + width + ";"
             }));
-            this.dropzone = new Dropzone("#" + this.id + "_zone", {
-                autoDiscover: false,
+            this.dropzone = new Constructdropzone("#" + this.id + "_zone", {
+                autoDiscover: false, 
                 maxFilesize: this.maxFileSize,
                 url: dojoLang.hitch(this, this.getMendixURL),
-                paramName: "mxdocument",
+                paramName: "blob",
                 autoProcessQueue: this.autoUpload,
                 addRemoveLinks: true,
                 dictDefaultMessage: this.message,
                 accept: dojoLang.hitch(this, this.accept),
-                parallelUploads: this.parallelUploads
+                parallelUploads: this.parallelUploads,
+				headers: {
+					'X-Csrf-Token': mx.session.getCSRFToken(),
+					'X-Requested-With': 'XMLHttpRequest'
+				}
             });
             this.dropzone.on("success", dojoLang.hitch(this, this.onComplete));
             this.dropzone.on("error", dojoLang.hitch(this, this.onError));
             this.dropzone.on("removedfile", dojoLang.hitch(this, this.onRemoveFile));
+			this.dropzone.on("sending", dojoLang.hitch(this, this.addFormData));
+			
         },
+        /**
+         * add Mendix 7 'data' part to formdata
+         * @param {data[]} files
+		 * @param {xhr} XMLhttprequest
+		 * @param {formData} dropzone.js created formdata
+         * @returns added formData 
+        */		
+		addFormData: function(data, xhr, formData) {
+			// Mendix 7 expects a data part.
+			var s = '{"changes":{},"objects":[]}';
+			formData.append("data", s);			
+		},
         /**
          * set the Mendix upload URL based on the GUID
          * @param {file[]} files
          * @returns {String} url - mendix server URL to post the file to.s 
-         */
+        */
         getMendixURL: function (files) {
             logger.debug(this.id + ".getMendixURL");
-            return "/file?guid=" + files[0].obj.getGuid() + "&maxFileSize=" + this.maxFileSize + "&csrfToken=" + mx.session.getCSRFToken() + "&height=75&width=100";
+            return "/file?guid=" + files[0].obj.getGuid() + "&maxFileSize=" + this.maxFileSize + "&height=75&width=100";
         },
         /**
          * on error remove the files.
@@ -238,10 +270,52 @@ define([
          * @returns {undefined}
          */
         createMendixFile: function (file, callback) {
-            logger.debug(this.id + ".createMendixFile");
+            logger.debug(this.id + ".createMendixFile", file.name);
+
             mx.data.create({
                 entity: this.imageentity,
                 callback: dojoLang.hitch(this, function (obj) {
+					logger.debug('create', obj);
+                    var ref = this.contextassociation.split("/");
+                    if (obj.has(ref[0])) {
+                        obj.set(ref[0], this._contextObj.getGuid());
+                    }
+                    obj.set(this.nameattr, file.name);
+                    if (this.sizeattr) {
+                        obj.set(this.sizeattr, file.size);
+                    }
+                    if (this.typeattr) {
+                        obj.set(this.typeattr, file.type);
+                    }
+                    file.obj = obj;
+					logger.debug('save document');
+					mx.data.saveDocument(
+						file.obj.getGuid(), 
+						file.obj.name, 
+						{ width: 100, height: 75 }, 
+						file, 
+						function(obj) {
+							logger.debug('save succes', obj); 
+							// call callback when done
+							callback();
+						}, function(e) {
+							logger.debug('save error', e); 
+							callback();
+					});		 
+						
+                }),
+                error: function () {
+                    logger.error("failed createMendixFile");
+                    callback();
+                }
+            });
+        },
+        createMendixFile2: function (file, callback) {
+            logger.debug(this.id + ".createMendixFile", file.name);
+            mx.data.create({
+                entity: this.imageentity,
+                callback: dojoLang.hitch(this, function (obj) {
+					logger.debug('create', obj);
                     var ref = this.contextassociation.split("/");
                     if (obj.has(ref[0])) {
                         obj.set(ref[0], this._contextObj.getGuid());
@@ -273,11 +347,13 @@ define([
                 mx.data.remove({
                     guid: file.obj.getGuid(),
                     callback: function () {
-                        mx.data.sendClassUpdate(file.obj.getEntity());
+                        mx.data.update({
+							entity: file.obj.getEntity()
+						}); 
                         file.obj = null;
                     },
                     error: function (err) {
-                        console.log("Error occurred attempting to remove object " + err);
+                        logger.debug("Error occurred attempting to remove object " + err);
                     }
                 });
             }
@@ -288,7 +364,9 @@ define([
          */
         onclickEvent: function () {
             logger.debug(this.id + ".onclickEvent");
-            this.dropzone.processQueue();
+            this.dropzone.processQueue(); 
+			logger.debug('dz', this.dropzone.getQueuedFiles()); 
+			//cdg test this.processQueue();
         },
         /**
          * Call onchange Miroflow if any. 
