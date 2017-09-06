@@ -1,11 +1,11 @@
 /*jslint browser: true, devel:true, nomen:true, unparam:true, regexp: true*/
-/*global define, require, mxui, mx, mendix, Dropzone, logger*/
+/*global define, require, mxui, mx, mendix, logger*/
 
 /*
     DropZone
     ========================
     @file      : Dropzone.js
-    @version   : 4.0.1
+    @version   : 4.0.2
     @author    : Andries Smit & Chris de Gelder
     @date      : 06-09-2017 
     @license   : Apache V2
@@ -46,7 +46,6 @@ define([
         uploadButton: null,
         dropzone: null,
         parallelUploads: 4,
-		currentParallelUploads: 0,
         _contextObj: null,
 
         /**
@@ -65,7 +64,6 @@ define([
          * @returns {undefined}
          */
         postCreate: function () {
-			console.log("XXX", mx.session);
             logger.debug(this.id + ".postCreate");
             this.initDropZone();
 			logger.debug('this', this);
@@ -87,7 +85,6 @@ define([
          * @returns {undefined}
          */
         initDropZone: function () {
-			console.log("XXX", mx.session.sessionData.csrftoken);
             logger.debug(this.id + ".initDropZone");
             domConstruct.empty(this.domNode);
             if (!this.autoUpload) {
@@ -184,9 +181,7 @@ define([
                         applyto: "selection",
                         guids: [obj.getGuid()]
                     },
-                    store: {
-                        caller: this.mxform
-                    },
+                    origin: this.mxform,
                     callback: dojoLang.hitch(this, function (result) {
                         file.obj = null;
                     }),
@@ -246,9 +241,7 @@ define([
                         applyto: "selection",
                         guids: [file.obj.getGuid()]
                     },
-                    store: {
-                        caller: this.mxform
-                    },
+                    origin: this.mxform,
                     callback: dojoLang.hitch(this, function (result) {
                         if (!result) {
                             callback(rejectcaption);
@@ -312,32 +305,6 @@ define([
                 }
             });
         },
-        createMendixFile2: function (file, callback) {
-            logger.debug(this.id + ".createMendixFile", file.name);
-            mx.data.create({
-                entity: this.imageentity,
-                callback: dojoLang.hitch(this, function (obj) {
-					logger.debug('create', obj);
-                    var ref = this.contextassociation.split("/");
-                    if (obj.has(ref[0])) {
-                        obj.set(ref[0], this._contextObj.getGuid());
-                    }
-                    obj.set(this.nameattr, file.name);
-                    if (this.sizeattr) {
-                        obj.set(this.sizeattr, file.size);
-                    }
-                    if (this.typeattr) {
-                        obj.set(this.typeattr, file.type);
-                    }
-                    file.obj = obj;
-                    callback();
-                }),
-                error: function () {
-                    logger.error("failed createMendixFile");
-                    callback();
-                }
-            });
-        },
         /**
          * Remove file directly via the client API.
          * @param {File} file - file that needs to be removed.
@@ -384,9 +351,7 @@ define([
                         applyto: "selection",
                         guids: [obj.getGuid()]
                     },
-                    store: {
-                        caller: this.mxform
-                    },
+                    origin: this.mxform,
                     callback: dojoLang.hitch(this, function () {
                         logger.debug("callOnChange");
                     }),
