@@ -5,9 +5,9 @@
     DropZone
     ========================
     @file      : Dropzone.js
-    @version   : 4.0.0
+    @version   : 4.0.1
     @author    : Andries Smit & Chris de Gelder
-    @date      : 13-03-2017
+    @date      : 06-09-2017 
     @license   : Apache V2
 
     Documentation
@@ -65,6 +65,7 @@ define([
          * @returns {undefined}
          */
         postCreate: function () {
+			console.log("XXX", mx.session);
             logger.debug(this.id + ".postCreate");
             this.initDropZone();
 			logger.debug('this', this);
@@ -86,6 +87,7 @@ define([
          * @returns {undefined}
          */
         initDropZone: function () {
+			console.log("XXX", mx.session.sessionData.csrftoken);
             logger.debug(this.id + ".initDropZone");
             domConstruct.empty(this.domNode);
             if (!this.autoUpload) {
@@ -121,7 +123,7 @@ define([
                 accept: dojoLang.hitch(this, this.accept),
                 parallelUploads: this.parallelUploads,
 				headers: {
-					'X-Csrf-Token': mx.session.getCSRFToken(),
+					'X-Csrf-Token': mx.session.sessionData.csrftoken,
 					'X-Requested-With': 'XMLHttpRequest'
 				}
             });
