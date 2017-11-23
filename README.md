@@ -4,11 +4,11 @@
 Mendix implementation of the DropZone widget.
 
 Credits to: http://www.dropzonejs.com/
- 
+
 **Description**
 
  Upload multiple images or filedocuments on a canvas an upload them together. All processed files are marked with a tick-box, errors with a red cross.
- 
+
 **History**
 
 Update 3.0.2: css loading on linux and Mendix cloud
@@ -26,7 +26,7 @@ Update 3.0.2: css loading on linux and Mendix cloud
  -   Put the widget on a context form.
 
 **Properties**
- 
+
 -   Image entity: filedocument or inherited entity
 
 -   Association to context: Set this to associate the images to the context. For example Item has multiple images use Image\_Item.
@@ -40,6 +40,8 @@ Update 3.0.2: css loading on linux and Mendix cloud
 -   On accept: when an image is uploaded this is called. Return true to accept a file, false to reject.
 
 -   On remove: when a file is uploaded and then deleted, this microflow is called an should delete the filedocument.
+
+-   On queue complete: when the upload queue completes uploading.
 
 -   maxFileSize: Maximum file size in MB
 
@@ -55,16 +57,16 @@ Update 3.0.2: css loading on linux and Mendix cloud
  When you don't provide an on remove microflow the file is deleted but the screen is not refreshed.
 
  All of the original issues of the [Dropzone library] (https://github.com/enyo/dropzone/issues)
- 
+
 
 **Frequently Asked Questions**
 
- 
+
 
 Ask your question at the Mendix Community [*Forum*](https://mxforum.mendix.com/)
 
- 
+
 
 -   None
--   
+-
 > Written with [StackEdit](https://stackedit.io/).
