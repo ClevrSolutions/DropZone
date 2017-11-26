@@ -40,6 +40,12 @@ define([
         imageentity: "",
         onChangemf: "",
         onQueueCompleteMf: "",
+        resizeWidth: "",
+        resizeHeight: "",
+        resizeQuality: "",
+        resizeMimeType: "",
+        resizeMethod: "",
+        multipleFiles: true,
         contextassociation: "",
         panelheight: 200,
         panelwidth: 500,
@@ -105,6 +111,12 @@ define([
 				height = "100%";
 				width = "100%";
 			}
+            var resizeHeight = this.resizeHeight ? this.resizeHeight : null,
+                resizeWidth = this.resizeWidth ? this.resizeWidth : null,
+                resizeQuality = this.resizeQuality ? (this.resizeQuality / 100) : null,
+                resizeMethod = this.resizeMethod ? this.resizeMethod : null,
+                resizeMimeType = (this.resizeMimeType && this.MimeType !== "original") ? ("image/" + this.resizeMimeType) : null,
+                maxFiles = this.multipleFiles ? null : 1;
             this.domNode.appendChild(mxui.dom.create("div", {
                 "id": this.id + "_zone",
                 "class": "dropzone",
@@ -123,7 +135,13 @@ define([
 				headers: {
 					'X-Csrf-Token': mx.session.sessionData.csrftoken,
 					'X-Requested-With': 'XMLHttpRequest'
-				}
+				},
+                resizeHeight: resizeHeight,
+                resizeWidth: resizeWidth,
+                resizeQuality: resizeQuality,
+                resizeMethod: resizeMethod,
+                resizeMimeType: resizeMimeType,
+                maxFiles: maxFiles
             });
             this.dropzone.on("success", dojoLang.hitch(this, this.onComplete));
             this.dropzone.on("error", dojoLang.hitch(this, this.onError));
@@ -399,3 +417,5 @@ define([
         }
     });
 });
+
+

@@ -51,6 +51,18 @@ Update 3.0.2: css loading on linux and Mendix cloud
 
 -   Auto Start Upload: Hides upload button start uploading on drop.
 
+-   Multiple Files: If true allow multiple files to be uploaded, if false only one at a time.
+
+-   Resize Width: If set, the image will be resized to this maximum width BEFORE upload.
+
+-   Resize Height: If set, the image will be resized to this maximum height BEFORE upload.
+
+-   Resize Quality: The quality of the resize.
+
+-   Resize Method: Either "crop" or "contain" the image when resizing.
+
+-   Resize MimeType: The format of the image to upload. This can convert the type of image BEFORE upload.
+
 
 **Known bugs**
 
