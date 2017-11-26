@@ -7,7 +7,7 @@
     @file      : Dropzone.js
     @version   : 4.0.2
     @author    : Andries Smit & Chris de Gelder
-    @date      : 06-09-2017 
+    @date      : 06-09-2017
     @license   : Apache V2
 
     Documentation
@@ -15,7 +15,7 @@
     Drop multiple images or documents and upload.
 	Mendix 7.x version.
 
-    
+
     To be done:
     - fix, upload button image
     - is relative dimension, width, height.
@@ -39,6 +39,13 @@ define([
         maxFileSize: 0,
         imageentity: "",
         onChangemf: "",
+        onQueueCompleteMf: "",
+        resizeWidth: "",
+        resizeHeight: "",
+        resizeQuality: "",
+        resizeMimeType: "",
+        resizeMethod: "",
+        multipleFiles: true,
         contextassociation: "",
         panelheight: 200,
         panelwidth: 500,
@@ -80,7 +87,7 @@ define([
             mendix.lang.nullExec(callback);
         },
         /**
-         * initalize the dropzone library. 
+         * initalize the dropzone library.
          * @private
          * @returns {undefined}
          */
@@ -89,8 +96,8 @@ define([
             domConstruct.empty(this.domNode);
             if (!this.autoUpload) {
                 this.uploadButton = new mxui.dom.create('Button', {
-					type: 'button', 
-					class: 'btn mx-button btn-default', 
+					type: 'button',
+					class: 'btn mx-button btn-default',
                     icon: "mxclientsystem/mxui/widget/styles/images/MxFileInput/uploading.gif"
                 });
 				this.uploadButton.innerHTML = this.buttoncaption;
@@ -104,13 +111,19 @@ define([
 				height = "100%";
 				width = "100%";
 			}
+            var resizeHeight = this.resizeHeight ? this.resizeHeight : null,
+                resizeWidth = this.resizeWidth ? this.resizeWidth : null,
+                resizeQuality = this.resizeQuality ? (this.resizeQuality / 100) : null,
+                resizeMethod = this.resizeMethod ? this.resizeMethod : null,
+                resizeMimeType = (this.resizeMimeType && this.MimeType !== "original") ? ("image/" + this.resizeMimeType) : null,
+                maxFiles = this.multipleFiles ? null : 1;
             this.domNode.appendChild(mxui.dom.create("div", {
                 "id": this.id + "_zone",
                 "class": "dropzone",
                 "style": "height: " + height + "; width: " + width + ";"
             }));
             this.dropzone = new Constructdropzone("#" + this.id + "_zone", {
-                autoDiscover: false, 
+                autoDiscover: false,
                 maxFilesize: this.maxFileSize,
                 url: dojoLang.hitch(this, this.getMendixURL),
                 paramName: "blob",
@@ -122,30 +135,37 @@ define([
 				headers: {
 					'X-Csrf-Token': mx.session.sessionData.csrftoken,
 					'X-Requested-With': 'XMLHttpRequest'
-				}
+				},
+                resizeHeight: resizeHeight,
+                resizeWidth: resizeWidth,
+                resizeQuality: resizeQuality,
+                resizeMethod: resizeMethod,
+                resizeMimeType: resizeMimeType,
+                maxFiles: maxFiles
             });
             this.dropzone.on("success", dojoLang.hitch(this, this.onComplete));
             this.dropzone.on("error", dojoLang.hitch(this, this.onError));
             this.dropzone.on("removedfile", dojoLang.hitch(this, this.onRemoveFile));
 			this.dropzone.on("sending", dojoLang.hitch(this, this.addFormData));
-			
+            this.dropzone.on("queuecomplete", dojoLang.hitch(this, this.onQueueComplete));
+
         },
         /**
          * add Mendix 7 'data' part to formdata
          * @param {data[]} files
 		 * @param {xhr} XMLhttprequest
 		 * @param {formData} dropzone.js created formdata
-         * @returns added formData 
-        */		
+         * @returns added formData
+        */
 		addFormData: function(data, xhr, formData) {
 			// Mendix 7 expects a data part.
 			var s = '{"changes":{},"objects":[]}';
-			formData.append("data", s);			
+			formData.append("data", s);
 		},
         /**
          * set the Mendix upload URL based on the GUID
          * @param {file[]} files
-         * @returns {String} url - mendix server URL to post the file to.s 
+         * @returns {String} url - mendix server URL to post the file to.s
         */
         getMendixURL: function (files) {
             logger.debug(this.id + ".getMendixURL");
@@ -211,8 +231,31 @@ define([
                 });
             }
             if (!this.autoUpload) {
-				this.dropzone.processQueue(); 
+				this.dropzone.processQueue();
 			}
+        },
+        /**
+         * When all files in the queue finish uploading call microflow onQueueCompleteMf
+         * @returns {undefined}
+         */
+        onQueueComplete: function () {
+            logger.debug(this.id + ".onQueueComplete");
+            if (this.onQueueCompleteMf) {
+                mx.data.action({
+                    params: {
+                        actionname: this.onQueueCompleteMf,
+                        applyto: "selection",
+                        guids: []
+                    },
+                    origin: this.mxform,
+                    callback: dojoLang.hitch(this, function () {
+                        logger.debug("onQueueComplete");
+                    }),
+                    error: function (e) {
+                        logger.error("onQueueComplete", e);
+                    }
+                });
+            }
         },
         /**
          * Create file on mendix server, and validate if it could be accepted.
@@ -285,19 +328,19 @@ define([
                     file.obj = obj;
 					logger.debug('save document');
 					mx.data.saveDocument(
-						file.obj.getGuid(), 
-						file.obj.name, 
-						{ width: 100, height: 75 }, 
-						file, 
+						file.obj.getGuid(),
+						file.obj.name,
+						{ width: 100, height: 75 },
+						file,
 						function(obj) {
-							logger.debug('save succes', obj); 
+							logger.debug('save succes', obj);
 							// call callback when done
 							callback();
 						}, function(e) {
-							logger.debug('save error', e); 
+							logger.debug('save error', e);
 							callback();
-					});		 
-						
+					});
+
                 }),
                 error: function () {
                     logger.error("failed createMendixFile");
@@ -318,7 +361,7 @@ define([
                     callback: function () {
                         mx.data.update({
 							entity: file.obj.getEntity()
-						}); 
+						});
                         file.obj = null;
                     },
                     error: function (err) {
@@ -333,12 +376,12 @@ define([
          */
         onclickEvent: function () {
             logger.debug(this.id + ".onclickEvent");
-            this.dropzone.processQueue(); 
-			logger.debug('dz', this.dropzone.getQueuedFiles()); 
+            this.dropzone.processQueue();
+			logger.debug('dz', this.dropzone.getQueuedFiles());
 			//cdg test this.processQueue();
         },
         /**
-         * Call onchange Miroflow if any. 
+         * Call onchange Miroflow if any.
          * @param {mendix/lib/MxObject} obj
          * @returns {undefined}
          */
@@ -374,3 +417,5 @@ define([
         }
     });
 });
+
+

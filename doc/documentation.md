@@ -8,10 +8,12 @@ DropZone.widget.DropZone
     * [~constructor()](#DropZone.widget.module_DropZone..constructor) ⇒ <code>undefined</code>
     * [~postCreate()](#DropZone.widget.module_DropZone..postCreate) ⇒ <code>undefined</code>
     * [~update(obj, callback)](#DropZone.widget.module_DropZone..update) ⇒ <code>undefined</code>
+    * [~addFormData(files, XMLhttprequest)](#DropZone.widget.module_DropZone..addFormData) ⇒
     * [~getMendixURL(files)](#DropZone.widget.module_DropZone..getMendixURL) ⇒ <code>String</code>
     * [~onError(file, message)](#DropZone.widget.module_DropZone..onError) ⇒ <code>undefined</code>
     * [~onRemoveFile(file, message)](#DropZone.widget.module_DropZone..onRemoveFile) ⇒ <code>undefined</code>
     * [~onComplete(file, message)](#DropZone.widget.module_DropZone..onComplete) ⇒ <code>undefined</code>
+    * [~onQueueComplete()](#DropZone.widget.module_DropZone..onQueueComplete) ⇒ <code>undefined</code>
     * [~accept(file, callback)](#DropZone.widget.module_DropZone..accept) ⇒ <code>undefined</code>
     * [~acceptMendix(file, callback)](#DropZone.widget.module_DropZone..acceptMendix) ⇒ <code>undefined</code>
     * [~createMendixFile(file, callback)](#DropZone.widget.module_DropZone..createMendixFile) ⇒ <code>undefined</code>
@@ -44,6 +46,20 @@ mxui.widget._WidgetBase.update is called when context is changed or initialized.
 | --- | --- | --- |
 | obj | <code>mendix/lib/MxObject</code> | the current track object, or null if there is none |
 | callback | <code>mxui/widget/_WidgetBase~ApplyContextCallback</code> | function to be called when finished |
+
+<a name="DropZone.widget.module_DropZone..addFormData"></a>
+
+### DropZone~addFormData(files, XMLhttprequest) ⇒
+add Mendix 7 'data' part to formdata
+
+**Kind**: inner method of <code>[DropZone](#DropZone.widget.module_DropZone)</code>  
+**Returns**: added formData  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| files | <code>Array.&lt;data&gt;</code> |  |
+| XMLhttprequest | <code>xhr</code> |  |
+| dropzone.js | <code>formData</code> | created formdata |
 
 <a name="DropZone.widget.module_DropZone..getMendixURL"></a>
 
@@ -93,6 +109,12 @@ when uploadload is completed, commit and call onchange MF
 | file | <code>type</code> | the file that is completed |
 | message | <code>type</code> | status message |
 
+<a name="DropZone.widget.module_DropZone..onQueueComplete"></a>
+
+### DropZone~onQueueComplete() ⇒ <code>undefined</code>
+When all files in the queue finish uploading call microflow onQueueCompleteMf
+
+**Kind**: inner method of <code>[DropZone](#DropZone.widget.module_DropZone)</code>  
 <a name="DropZone.widget.module_DropZone..accept"></a>
 
 ### DropZone~accept(file, callback) ⇒ <code>undefined</code>
@@ -120,7 +142,8 @@ Validate if object will be accepted by the mendix server
 <a name="DropZone.widget.module_DropZone..createMendixFile"></a>
 
 ### DropZone~createMendixFile(file, callback) ⇒ <code>undefined</code>
-Create a mendix empty file object on the server when new upload item is added.Upload of the file be done by the DropZoneJs lib
+Create a mendix empty file object on the server when new upload item is added.
+Upload of the file be done by the DropZoneJs lib
 
 **Kind**: inner method of <code>[DropZone](#DropZone.widget.module_DropZone)</code>  
 
@@ -160,6 +183,7 @@ Call onchange Miroflow if any.
 <a name="DropZone.widget.module_DropZone..uninitialize"></a>
 
 ### DropZone~uninitialize() ⇒ <code>undefined</code>
-mxui.widget._WidgetBase.uninitialize is called when the widget is destroyed. Implement to do special tear-down work.Clean up listeners, helper objects, etc. There is no need to remove listeners added with this.connect / this.subscribe / this.own.
+mxui.widget._WidgetBase.uninitialize is called when the widget is destroyed. Implement to do special tear-down work.
+Clean up listeners, helper objects, etc. There is no need to remove listeners added with this.connect / this.subscribe / this.own.
 
 **Kind**: inner method of <code>[DropZone](#DropZone.widget.module_DropZone)</code>  

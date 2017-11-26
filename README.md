@@ -4,11 +4,11 @@
 Mendix implementation of the DropZone widget.
 
 Credits to: http://www.dropzonejs.com/
- 
+
 **Description**
 
  Upload multiple images or filedocuments on a canvas an upload them together. All processed files are marked with a tick-box, errors with a red cross.
- 
+
 **History**
 
 Update 3.0.2: css loading on linux and Mendix cloud
@@ -26,7 +26,7 @@ Update 3.0.2: css loading on linux and Mendix cloud
  -   Put the widget on a context form.
 
 **Properties**
- 
+
 -   Image entity: filedocument or inherited entity
 
 -   Association to context: Set this to associate the images to the context. For example Item has multiple images use Image\_Item.
@@ -41,6 +41,8 @@ Update 3.0.2: css loading on linux and Mendix cloud
 
 -   On remove: when a file is uploaded and then deleted, this microflow is called an should delete the filedocument.
 
+-   On queue complete: when the upload queue completes uploading.
+
 -   maxFileSize: Maximum file size in MB
 
 -   Button caption: Text on the upload button (can be translated).
@@ -49,22 +51,34 @@ Update 3.0.2: css loading on linux and Mendix cloud
 
 -   Auto Start Upload: Hides upload button start uploading on drop.
 
+-   Multiple Files: If true allow multiple files to be uploaded, if false only one at a time.
+
+-   Resize Width: If set, the image will be resized to this maximum width BEFORE upload.
+
+-   Resize Height: If set, the image will be resized to this maximum height BEFORE upload.
+
+-   Resize Quality: The quality of the resize.
+
+-   Resize Method: Either "crop" or "contain" the image when resizing.
+
+-   Resize MimeType: The format of the image to upload. This can convert the type of image BEFORE upload.
+
 
 **Known bugs**
 
  When you don't provide an on remove microflow the file is deleted but the screen is not refreshed.
 
  All of the original issues of the [Dropzone library] (https://github.com/enyo/dropzone/issues)
- 
+
 
 **Frequently Asked Questions**
 
- 
+
 
 Ask your question at the Mendix Community [*Forum*](https://mxforum.mendix.com/)
 
- 
+
 
 -   None
--   
+-
 > Written with [StackEdit](https://stackedit.io/).

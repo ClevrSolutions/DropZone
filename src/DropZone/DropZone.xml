@@ -14,26 +14,26 @@
         <property key="nameattr" type="attribute" required="true" entityProperty="imageentity">
             <caption>Name attribute</caption>
             <category>Data</category>
-            <description>Attribute for name of the file, normally 'name'</description> 
+            <description>Attribute for name of the file, normally 'name'</description>
             <attributeTypes>
-                <attributeType name="String"/> 
+                <attributeType name="String"/>
             </attributeTypes>
         </property>
         <property key="typeattr" type="attribute" required="false" entityProperty="imageentity">
             <caption>Type attribute</caption>
             <category>Data</category>
-            <description>Attribute for the filetype, it is not required, it can be used to filter data in the on accept microflow. Values are like 'image/jpeg'</description> 
+            <description>Attribute for the filetype, it is not required, it can be used to filter data in the on accept microflow. Values are like 'image/jpeg'</description>
             <attributeTypes>
-                <attributeType name="String"/> 
+                <attributeType name="String"/>
             </attributeTypes>
-        </property>		
+        </property>
         <property key="sizeattr" type="attribute" required="false" entityProperty="imageentity">
             <caption>Size attribute</caption>
             <category>Data</category>
-            <description>Attribute for the size, not required, can be used to filter data in onAccept.</description> 
+            <description>Attribute for the size, not required, can be used to filter data in onAccept.</description>
             <attributeTypes>
-                <attributeType name="Integer"/> 
-                <attributeType name="Long"/> 
+                <attributeType name="Integer"/>
+                <attributeType name="Long"/>
             </attributeTypes>
         </property>
         <property key="contextassociation" type="entity" entityProperty="imageentity" isPath="yes" pathType="reference" required="false">
@@ -60,7 +60,12 @@
             <caption>Autosize</caption>
             <category>Settings</category>
             <description>When documents are dropped the panel is sized.</description>
-        </property>        
+        </property>
+        <property key="multipleFiles" type="boolean" defaultValue="true">
+            <caption>multipleFiles</caption>
+            <category>Settings</category>
+            <description>Allow uploading of more than one file.</description>
+        </property>
 		<property key="buttoncaption" type="translatableString" required="false">
             <caption>Button caption</caption>
             <category>Display</category>
@@ -79,7 +84,7 @@
         <property key="message" type="translatableString" required="false">
             <caption>Init Message</caption>
             <category>Display</category>
-            <description>The message that gets displayed before any files are dropped.</description>            
+            <description>The message that gets displayed before any files are dropped.</description>
             <translations>
                 <translation lang="en_US">Click here, or drop files here to upload.</translation>
                 <translation lang="nl_NL">Klik hier, of sleep bestanden hierheen om te uploaden.</translation>
@@ -102,6 +107,47 @@
             <category>Events</category>
             <description>Microflow is called when an uploaded file is removed. You should remove the object yourself.</description>
             <returnType type="Boolean"/>
+        </property>
+        <property key="onQueueCompleteMf" type="microflow" required="false" entityProperty="imageentity">
+            <caption>On Queue Complete</caption>
+            <category>Events</category>
+            <description>Microflow is called when all files in the queue finish uploading.</description>
+            <returnType type="Void"/>
+        </property>
+        <property key="resizeWidth" type="string" required="false">
+            <caption>Resize Width</caption>
+            <category>Resize</category>
+            <description>If set, images will be resized to these dimensions before being uploaded. Set only width or height to retain aspect ratio.</description>
+        </property>
+        <property key="resizeHeight" type="string" required="false">
+            <caption>Resize Height</caption>
+            <category>Resize</category>
+            <description>If set, images will be resized to these dimensions before being uploaded. Set only width or height to retain aspect ratio</description>
+        </property>
+        <property key="resizeQuality" type="integer" defaultValue="80">
+            <caption>Resize Quality</caption>
+            <category>Resize</category>
+            <description>The quality of resized images on a scale of 0 to 100 (best)</description>
+        </property>
+        <property key="resizeMethod" type="enumeration" defaultValue="contain">
+            <caption>Resize Method</caption>
+            <category>Resize</category>
+            <description>How the images should be scaled down in case both a resize width and height are provided.</description>
+            <enumerationValues>
+                <enumerationValue key="contain">Contain</enumerationValue>
+                <enumerationValue key="crop">Crop</enumerationValue>
+            </enumerationValues>
+        </property>
+        <property key="resizeMimeType" type="enumeration" defaultValue="original">
+            <caption>Image format</caption>
+            <category>Resize</category>
+            <description>What format should the resized image be uploaded as?</description>
+            <enumerationValues>
+                <enumerationValue key="original">Original</enumerationValue>
+                <enumerationValue key="gif">GIF</enumerationValue>
+                <enumerationValue key="jpeg">JPEG</enumerationValue>
+                <enumerationValue key="png">PNG</enumerationValue>
+            </enumerationValues>
         </property>
     </properties>
 </widget>
