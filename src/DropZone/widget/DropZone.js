@@ -120,7 +120,7 @@ define([
                 accept: dojoLang.hitch(this, this.accept),
                 parallelUploads: this.parallelUploads,
 				headers: {
-					'X-Csrf-Token': mx.session.sessionData.csrftoken,
+					'X-Csrf-Token': mx.session.getConfig('csrftoken'),
 					'X-Requested-With': 'XMLHttpRequest'
 				}
             });
