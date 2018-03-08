@@ -23,6 +23,7 @@ public class CustomerImage extends system.proxies.Image
 		DeleteAfterDownload("DeleteAfterDownload"),
 		Contents("Contents"),
 		HasContents("HasContents"),
+		Size("Size"),
 		CustomerImage_Customer("MyFirstModule.CustomerImage_Customer");
 
 		private java.lang.String metaName;

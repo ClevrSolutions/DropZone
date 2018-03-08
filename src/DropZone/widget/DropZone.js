@@ -5,7 +5,7 @@
     DropZone
     ========================
     @file      : Dropzone.js
-    @version   : 4.0.2
+    @version   : 4.0.3
     @author    : Andries Smit & Chris de Gelder
     @date      : 06-09-2017 
     @license   : Apache V2
@@ -13,8 +13,9 @@
     Documentation
     ========================
     Drop multiple images or documents and upload.
-	Mendix 7.x version.
-
+	Mendix 7.12 version.
+	- 8-3-2018 mxui.dom. functions replaced with domConstruct.create
+	- 8-3-2018 Merge csrftoken (Thanks Jelte)
     
     To be done:
     - fix, upload button image
@@ -88,7 +89,7 @@ define([
             logger.debug(this.id + ".initDropZone");
             domConstruct.empty(this.domNode);
             if (!this.autoUpload) {
-                this.uploadButton = new mxui.dom.create('Button', {
+                this.uploadButton = domConstruct.create('button', {
 					type: 'button', 
 					class: 'btn mx-button btn-default', 
                     icon: "mxclientsystem/mxui/widget/styles/images/MxFileInput/uploading.gif"
@@ -104,7 +105,7 @@ define([
 				height = "100%";
 				width = "100%";
 			}
-            this.domNode.appendChild(mxui.dom.create("div", {
+            this.domNode.appendChild(domConstruct.create("div", {
                 "id": this.id + "_zone",
                 "class": "dropzone",
                 "style": "height: " + height + "; width: " + width + ";"
@@ -359,7 +360,7 @@ define([
                         logger.error("callOnChange", e);
                     }
                 });
-            }
+			}
         },
         /**
          * mxui.widget._WidgetBase.uninitialize is called when the widget is destroyed. Implement to do special tear-down work.

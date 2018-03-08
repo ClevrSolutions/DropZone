@@ -1,4 +1,4 @@
-// Generated on 2016-07-14 using generator-mendix 1.3.6 :: git+https://github.com/mendix/generator-mendix.git
+// Generated on 2018-03-08 using generator-mendix 2.0.4 :: git+https://github.com/mendix/generator-mendix.git
 /*jshint -W069*/
 /*global module*/
 "use strict";
@@ -13,18 +13,18 @@ var MODELER_ARGS = "/file:{path}";
  ********************************************************************************/
 
 var path = require("path"),
-        mendixApp = require("node-mendix-modeler-path"),
-        base64 = require("node-base64-image"),
-        semver = require("semver"),
-        xml2js = require("xml2js"),
-        parser = new xml2js.Parser(),
-        builder = new xml2js.Builder({
-            renderOpts: {pretty: true, indent: "    ", newline: "\n"},
-            xmldec: {standalone: null, encoding: "utf-8"}
-        }),
-        shelljs = require("shelljs"),
-        pkg = require("./package.json"),
-        currentFolder = shelljs.pwd().toString();
+    mendixApp = require("node-mendix-modeler-path"),
+    base64 = require("node-base64-image"),
+    semver = require("semver"),
+    xml2js = require("xml2js"),
+    parser = new xml2js.Parser(),
+    builder = new xml2js.Builder({
+        renderOpts: { pretty: true, indent: "    ", newline: "\n" },
+        xmldec:     { standalone: null, encoding: "utf-8" }
+    }),
+    shelljs = require("shelljs"),
+    pkg = require("./package.json"),
+    currentFolder = shelljs.pwd().toString();
 
 var TEST_PATH = path.join(currentFolder, "/test/Test.mpr");
 var WIDGET_XML = path.join(currentFolder, "/src/", pkg.name, "/", pkg.name + ".xml");
@@ -55,8 +55,8 @@ module.exports = function (grunt) {
     grunt.initConfig({
         watch: {
             autoDeployUpdate: {
-                "files": ["./src/**/*"],
-                "tasks": ["compress", "newer:copy"],
+                "files": [ "./src/**/*" ],
+                "tasks": [ "compress", "newer:copy" ],
                 options: {
                     debounceDelay: 250,
                     livereload: true
@@ -69,24 +69,24 @@ module.exports = function (grunt) {
                     archive: "./dist/" + pkg.name + ".mpk",
                     mode: "zip"
                 },
-                files: [{
-                        expand: true,
-                        date: new Date(),
-                        store: false,
-                        cwd: "./src",
-                        src: ["**/*"]
-                    }]
+            files: [{
+                expand: true,
+                date: new Date(),
+                store: false,
+                cwd: "./src",
+                src: ["**/*"]
+              }]
             }
         },
         copy: {
             deployment: {
                 files: [
-                    {dest: TEST_WIDGETS_DEPLOYMENT_FOLDER, cwd: "./src/", src: ["**/*"], expand: true}
+                    { dest: TEST_WIDGETS_DEPLOYMENT_FOLDER, cwd: "./src/", src: ["**/*"], expand: true }
                 ]
             },
             mpks: {
                 files: [
-                    {dest: TEST_WIDGETS_FOLDER, cwd: "./dist/", src: [pkg.name + ".mpk"], expand: true}
+                    { dest: TEST_WIDGETS_FOLDER, cwd: "./dist/", src: [ pkg.name + ".mpk"], expand: true }
                 ]
             }
         },
@@ -97,16 +97,10 @@ module.exports = function (grunt) {
         },
         csslint: {
             strict: {
-                options: {
-                    import: 2
-                },
-                src: ["src/" + pkg.name + "/widget/ui/*.css"]
-            }
-        },
-        jsdoc2md: {
-            oneOutputFile: {
-                src: "src/" + pkg.name + "/widget/" + pkg.name + ".js",
-                dest: "doc/documentation.md"
+              options: {
+                import: 2
+              },
+              src: ["src/" + pkg.name + "/widget/ui/*.css"]
             }
         }
     });
@@ -117,7 +111,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-newer");
     grunt.loadNpmTasks("grunt-contrib-csslint");
-    grunt.loadNpmTasks('grunt-jsdoc-to-markdown');
 
     grunt.registerTask("start-modeler", function () {
         var done = this.async();
@@ -178,10 +171,10 @@ module.exports = function (grunt) {
 
     grunt.registerTask("generate-icon", function () {
         var iconPath = path.join(currentFolder, "/icon.png"),
-                options = {localFile: true, string: true},
-        done = this.async();
+            options = {localFile: true, string: true},
+            done = this.async();
 
-        grunt.log.writeln("Processing icon");
+            grunt.log.writeln("Processing icon");
 
         if (!grunt.file.exists(iconPath) || !grunt.file.exists(WIDGET_XML)) {
             grunt.log.error("can\'t generate icon");
@@ -219,22 +212,22 @@ module.exports = function (grunt) {
         return done();
     });
 
-    grunt.registerTask("start-mendix", ["start-modeler"]);
+    grunt.registerTask("start-mendix", [ "start-modeler" ]);
 
     grunt.registerTask(
-            "default",
-            "Watches for changes and automatically creates an MPK file, as well as copying the changes to your deployment folder",
-            ["watch"]
-            );
+        "default",
+        "Watches for changes and automatically creates an MPK file, as well as copying the changes to your deployment folder",
+        [ "watch" ]
+    );
 
     grunt.registerTask(
-            "clean build",
-            "Compiles all the assets and copies the files to the build directory.",
-            ["clean", "compress", "copy"]
-            );
+        "clean build",
+        "Compiles all the assets and copies the files to the build directory.",
+        [ "clean", "compress", "copy" ]
+    );
 
     grunt.registerTask(
-            "build",
-            ["clean build"]
-            );
+        "build",
+        [ "clean build" ]
+    );
 };
