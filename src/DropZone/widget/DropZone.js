@@ -150,7 +150,7 @@ define([
         */
         getMendixURL: function (files) {
             logger.debug(this.id + ".getMendixURL");
-            return "/file?guid=" + files[0].obj.getGuid() + "&maxFileSize=" + this.maxFileSize + "&height=75&width=100";
+            return mx.appUrl + "file?guid=" + files[0].obj.getGuid() + "&maxFileSize=" + this.maxFileSize + "&height=75&width=100";
         },
         /**
          * on error remove the files.
