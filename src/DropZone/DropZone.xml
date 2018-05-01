@@ -27,15 +27,6 @@
                 <attributeType name="String"/> 
             </attributeTypes>
         </property>		
-        <property key="sizeattr" type="attribute" required="false" entityProperty="imageentity">
-            <caption>Size attribute</caption>
-            <category>Data</category>
-            <description>Attribute for the size, not required, can be used to filter data in onAccept.</description> 
-            <attributeTypes>
-                <attributeType name="Integer"/> 
-                <attributeType name="Long"/> 
-            </attributeTypes>
-        </property>
         <property key="contextassociation" type="entity" entityProperty="imageentity" isPath="yes" pathType="reference" required="false">
             <caption>Association to context</caption>
             <category>Data</category>
@@ -71,6 +62,11 @@
             <category>Display</category>
             <description>Hide upload button start uploading on drop.</description>
         </property>
+        <property key="removeAfterUpload" type="boolean" defaultValue="false">
+            <caption>Remove after upload</caption>
+            <category>Display</category>
+            <description>Remove the file from the dropzone after uploading.</description>
+        </property>		
         <property key="rejectcaption" type="translatableString" required="false">
             <caption>Reject caption</caption>
             <category>Display</category>

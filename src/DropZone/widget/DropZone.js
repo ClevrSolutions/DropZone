@@ -5,7 +5,7 @@
     DropZone
     ========================
     @file      : Dropzone.js
-    @version   : 4.0.3
+    @version   : 4.0.4
     @author    : Andries Smit & Chris de Gelder
     @date      : 06-09-2017 
     @license   : Apache V2
@@ -78,7 +78,9 @@ define([
         update: function (obj, callback) {
             logger.debug(this.id + ".update");
             this._contextObj = obj;
-            mendix.lang.nullExec(callback);
+            if (callback) {
+				callback();
+			}
         },
         /**
          * initalize the dropzone library. 
@@ -129,7 +131,6 @@ define([
             this.dropzone.on("error", dojoLang.hitch(this, this.onError));
             this.dropzone.on("removedfile", dojoLang.hitch(this, this.onRemoveFile));
 			this.dropzone.on("sending", dojoLang.hitch(this, this.addFormData));
-			
         },
         /**
          * add Mendix 7 'data' part to formdata
@@ -160,7 +161,7 @@ define([
          */
         onError: function (file, message) {
             logger.error(this.id + ".onError", message);
-            this.onRemoveFile(file);
+            this.removeFile(file);
         },
         /**
          * an image should be removed from within a microflow, if there is non just delete if via the api
@@ -168,31 +169,35 @@ define([
          * @param {type} message - status message
          * @returns {undefined}
          */
-        onRemoveFile: function (file, message) {
+		onRemoveFile: function (file, message) {
             if (this._beingDestroyed) {
                 // dont remove the files when the widget is being destroyed by the uninitialize function.
                 return;
             }
             logger.debug(this.id + ".onRemoveFile");
             var obj = file.obj;
-            if (obj && this.onRemove) {
-                mx.data.action({
-                    params: {
-                        actionname: this.onRemove,
-                        applyto: "selection",
-                        guids: [obj.getGuid()]
-                    },
-                    origin: this.mxform,
-                    callback: dojoLang.hitch(this, function (result) {
-                        file.obj = null;
-                    }),
-                    error: function (e) {
-                        logger.error("onRemoveFile", e);
-                    }
-                });
-            } else {
-                this.removeFile(file);
-            }
+			console.log('delete', file.deleteAfterUpload);
+			// if autoremoveafter upload is enabled the removefile is called but should not remove the file from the Mendix application
+			if (!file.deleteAfterUpload) {
+				if (obj && this.onRemove) {
+					mx.data.action({
+						params: {
+							actionname: this.onRemove,
+							applyto: "selection",
+							guids: [obj.getGuid()]
+						},
+						origin: this.mxform,
+						callback: dojoLang.hitch(this, function (result) {
+							file.obj = null;
+						}),
+						error: function (e) {
+							logger.error("onRemoveFile", e);
+						}
+					});
+				} else {
+					this.removeFile(file);
+				}
+			}
         },
         /**
          * when uploadload is completed, commit and call onchange MF
@@ -208,6 +213,10 @@ define([
                     callback: dojoLang.hitch(this, function () {
                         logger.debug("onComplete");
                         this.callOnChange(file.obj);
+						if (this.removeAfterUpload) {
+							file.deleteAfterUpload = true;
+							this.dropzone.removeFile(file);
+						}
                     })
                 });
             }
@@ -215,6 +224,7 @@ define([
 				this.dropzone.processQueue(); 
 			}
         },
+		
         /**
          * Create file on mendix server, and validate if it could be accepted.
          * @param {File} file - the file that validate
@@ -273,13 +283,10 @@ define([
                 callback: dojoLang.hitch(this, function (obj) {
 					logger.debug('create', obj);
                     var ref = this.contextassociation.split("/");
-                    if (obj.has(ref[0])) {
+                    if (obj.has(ref[0]) && this._contextObj) {
                         obj.set(ref[0], this._contextObj.getGuid());
                     }
                     obj.set(this.nameattr, file.name);
-                    if (this.sizeattr) {
-                        obj.set(this.sizeattr, file.size);
-                    }
                     if (this.typeattr) {
                         obj.set(this.typeattr, file.type);
                     }
