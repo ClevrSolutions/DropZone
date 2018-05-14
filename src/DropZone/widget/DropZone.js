@@ -56,7 +56,7 @@ define([
          * @returns {undefined}
          */
         constructor: function () {
-            //logger.debug(this.id + ".constructor");
+            logger.debug(this.id + ".constructor");
             this.dropzone = null;
             this._contextObj = null;
         },
@@ -65,7 +65,7 @@ define([
          * @returns {undefined}
          */
         postCreate: function () {
-            //logger.debug(this.id + ".postCreate");
+            logger.debug(this.id + ".postCreate");
             this.initDropZone();
         },
         /**
@@ -75,7 +75,7 @@ define([
          * @returns {undefined}
          */
         update: function (obj, callback) {
-            //logger.debug(this.id + ".update");
+            logger.debug(this.id + ".update");
             this._contextObj = obj;
             if (callback) {
 				callback();
@@ -87,7 +87,7 @@ define([
          * @returns {undefined}
          */
         initDropZone: function () {
-            //logger.debug(this.id + ".initDropZone");
+            logger.debug(this.id + ".initDropZone");
             domConstruct.empty(this.domNode);
             if (!this.autoUpload) {
                 this.uploadButton = domConstruct.create('button', {
@@ -97,7 +97,7 @@ define([
                 });
 				this.uploadButton.innerHTML = this.buttoncaption;
 				on(this.uploadButton, "click", dojoLang.hitch(this, this.onclickEvent));
-				//logger.debug("button", this.uploadButton, this.buttonCaption);
+				logger.debug("button", this.uploadButton, this.buttonCaption);
                 this.domNode.appendChild(this.uploadButton);
             }
 			var height = this.panelheight + " px";
@@ -130,7 +130,7 @@ define([
             this.dropzone.on("error", dojoLang.hitch(this, this.onError));
             this.dropzone.on("removedfile", dojoLang.hitch(this, this.onRemoveFile));
 			this.dropzone.on("sending", dojoLang.hitch(this, this.addFormData));
-            //logger.debug(this.id + ".initDropZone done");
+            logger.debug(this.id + ".initDropZone done");
         },
         /**
          * add Mendix 7 'data' part to formdata
@@ -141,8 +141,9 @@ define([
         */		
 		addFormData: function(data, xhr, formData) {
 			// Mendix 7 expects a data part.
-			/*var s = '{"changes":{},"objects":[]}';*/
-			formData.append("data", JSON.stringify( { changes: {}, objects: [] }));			
+			var s = '{"changes":{},"objects":[]}';
+			formData.append("data", s);
+			//formData.append("data", JSON.stringify( { changes: {}, objects: [] }));			
 		},
         /**
          * set the Mendix upload URL based on the GUID
@@ -150,7 +151,7 @@ define([
          * @returns {String} url - mendix server URL to post the file to.s 
         */
         getMendixURL: function (files) {
-            //logger.debug(this.id + ".getMendixURL");
+            logger.debug(this.id + ".getMendixURL");
             return "/file?guid=" + files[0].obj.getGuid() + "&maxFileSize=" + this.maxFileSize + "&height=75&width=100";
         },
         /**
@@ -160,7 +161,7 @@ define([
          * @returns {undefined}
          */
         onError: function (file, message) {
-            //logger.error(this.id + ".onError", message);
+            logger.error(this.id + ".onError", message);
             this.removeFile(file);
         },
         /**
@@ -174,7 +175,7 @@ define([
                 // dont remove the files when the widget is being destroyed by the uninitialize function.
                 return;
             }
-            //logger.debug(this.id + ".onRemoveFile");
+            logger.debug(this.id + ".onRemoveFile");
             var obj = file.obj;
 			// if autoremoveafter upload is enabled the removefile is called but should not remove the file from the Mendix application
 			if (!file.deleteAfterUpload) {
@@ -190,7 +191,7 @@ define([
 							file.obj = null;
 						}),
 						error: function (e) {
-							//logger.error("onRemoveFile", e);
+							logger.error("onRemoveFile", e);
 						}
 					});
 				} else {
@@ -205,12 +206,12 @@ define([
          * @returns {undefined}
          */
         onComplete: function (file, message) {
-            //logger.debug(this.id + ".onComplete");
+            logger.debug(this.id + ".onComplete");
             if (file.obj) {
                 mx.data.commit({
                     mxobj: file.obj,
                     callback: dojoLang.hitch(this, function () {
-                        //logger.debug("onComplete");
+                        logger.debug("onComplete");
                         this.callOnChange(file.obj);
 						if (this.removeAfterUpload) {
 							file.deleteAfterUpload = true;
@@ -242,7 +243,7 @@ define([
          * @returns {undefined}
          */
         acceptMendix: function (file, callback) {
-            //logger.debug(this.id + ".accept");
+            logger.debug(this.id + ".accept");
             var rejectcaption = this.rejectcaption || "rejected";
             if (file.obj && this.onAccept) {
                 mx.data.action({
@@ -260,7 +261,7 @@ define([
                         }
                     }),
                     error: function (e) {
-                        //logger.error("addedFile", e);
+                        logger.error("addedFile", e);
                     }
                 });
             } else {
@@ -275,12 +276,12 @@ define([
          * @returns {undefined}
          */
         createMendixFile: function (file, callback) {
-            //logger.debug(this.id + ".createMendixFile", file.name);
+            logger.debug(this.id + ".createMendixFile", file.name);
 
             mx.data.create({
                 entity: this.imageentity,
                 callback: dojoLang.hitch(this, function (obj) {
-					//logger.debug('create', obj);
+					logger.debug('create', obj);
                     var ref = this.contextassociation.split("/");
                     if (obj.has(ref[0]) && this._contextObj) {
                         obj.set(ref[0], this._contextObj.getGuid());
@@ -290,24 +291,24 @@ define([
                         obj.set(this.typeattr, file.type);
                     }
                     file.obj = obj;
-					//logger.debug('save document');
+					logger.debug('save document');
 					mx.data.saveDocument(
 						file.obj.getGuid(), 
 						file.obj.name, 
 						{ width: 100, height: 75 }, 
 						file, 
 						function(obj) {
-							//logger.debug('save succes', obj); 
+							logger.debug('save succes', obj); 
 							// call callback when done
 							callback();
 						}, function(e) {
-							//logger.debug('save error', e); 
+							logger.debug('save error', e); 
 							callback();
 					});		 
 						
                 }),
                 error: function () {
-                    //logger.error("failed createMendixFile");
+                    logger.error("failed createMendixFile");
                     callback();
                 }
             });
@@ -318,7 +319,7 @@ define([
          * @returns {undefined}
          */
         removeFile: function (file) {
-            //logger.debug(this.id + ".removeFile");
+            logger.debug(this.id + ".removeFile");
             if (file.obj) {
                 mx.data.remove({
                     guid: file.obj.getGuid(),
@@ -329,7 +330,7 @@ define([
                         file.obj = null;
                     },
                     error: function (err) {
-                        //logger.debug("Error occurred attempting to remove object " + err);
+                        logger.debug("Error occurred attempting to remove object " + err);
                     }
                 });
             }
@@ -339,9 +340,9 @@ define([
          * @returns {undefined}
          */
         onclickEvent: function () {
-            //logger.debug(this.id + ".onclickEvent");
+            logger.debug(this.id + ".onclickEvent");
             this.dropzone.processQueue(); 
-			////logger.debug('dz', this.dropzone.getQueuedFiles()); 
+			logger.debug('dz', this.dropzone.getQueuedFiles()); 
         },
         /**
          * Call onchange Miroflow if any. 
@@ -349,7 +350,7 @@ define([
          * @returns {undefined}
          */
         callOnChange: function (obj) {
-            //logger.debug(this.id + ".callOnChange");
+            logger.debug(this.id + ".callOnChange");
             if (obj && this.onChangemf) {
                 mx.data.action({
                     params: {
@@ -359,10 +360,10 @@ define([
                     },
                     origin: this.mxform,
                     callback: dojoLang.hitch(this, function () {
-                        //logger.debug("callOnChange");
+                        logger.debug("callOnChange");
                     }),
                     error: function (e) {
-                        //logger.error("callOnChange", e);
+                        logger.error("callOnChange", e);
                     }
                 });
 			}
@@ -373,7 +374,7 @@ define([
          * @returns {undefined}
          */
         uninitialize: function () {
-            //logger.debug(this.id + ".uninitialize");
+            logger.debug(this.id + ".uninitialize");
             if (this.dropzone) {
                 this.dropzone.destroy();
             }
