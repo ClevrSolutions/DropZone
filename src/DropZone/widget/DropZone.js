@@ -205,7 +205,7 @@ define([
          * @param {type} message - status message
          * @returns {undefined}
          */
-        onComplete: function (file, message) {
+        onCompleteOld: function (file, message) {
             logger.debug(this.id + ".onComplete");
             if (file.obj) {
                 mx.data.commit({
@@ -219,6 +219,20 @@ define([
 						}
                     })
                 });
+            }
+            if (!this.autoUpload) {
+				this.dropzone.processQueue(); 
+			}
+        },
+        onComplete: function (file, message) {
+            logger.debug(this.id + ".onComplete");
+            if (file.obj) {
+				logger.debug(this.id + ".onComplete." + file.obj.getGuid());
+				this.callOnChange(file.obj);
+				if (this.removeAfterUpload) {
+					file.deleteAfterUpload = true;
+					this.dropzone.removeFile(file);
+				}
             }
             if (!this.autoUpload) {
 				this.dropzone.processQueue(); 
