@@ -5,6 +5,7 @@ test/.project
 test/userlib/
 test/.classpath
 test/.project
+test/GPUCache/
 *.launch
 *.tmp
 *.lock

@@ -14,19 +14,19 @@
         <property key="nameattr" type="attribute" required="true" entityProperty="imageentity">
             <caption>Name attribute</caption>
             <category>Data</category>
-            <description>Attribute for name of the file, normally 'name'</description> 
+            <description>Attribute for name of the file, normally 'name'</description>
             <attributeTypes>
-                <attributeType name="String"/> 
+                <attributeType name="String"/>
             </attributeTypes>
         </property>
         <property key="typeattr" type="attribute" required="false" entityProperty="imageentity">
             <caption>Type attribute</caption>
             <category>Data</category>
-            <description>Attribute for the filetype, it is not required, it can be used to filter data in the on accept microflow. Values are like 'image/jpeg'</description> 
+            <description>Attribute for the filetype, it is not required, it can be used to filter data in the on accept microflow. Values are like 'image/jpeg'</description>
             <attributeTypes>
-                <attributeType name="String"/> 
+                <attributeType name="String"/>
             </attributeTypes>
-        </property>		
+        </property>
         <property key="contextassociation" type="entity" entityProperty="imageentity" isPath="yes" pathType="reference" required="false">
             <caption>Association to context</caption>
             <category>Data</category>
@@ -51,8 +51,8 @@
             <caption>Autosize</caption>
             <category>Settings</category>
             <description>When documents are dropped the panel is sized.</description>
-        </property>        
-		<property key="buttoncaption" type="translatableString" required="false">
+        </property>
+        <property key="buttoncaption" type="translatableString" required="false">
             <caption>Button caption</caption>
             <category>Display</category>
             <description>Caption of the upload button.</description>
@@ -66,7 +66,7 @@
             <caption>Remove after upload</caption>
             <category>Display</category>
             <description>Remove the file from the dropzone after uploading.</description>
-        </property>		
+        </property>
         <property key="rejectcaption" type="translatableString" required="false">
             <caption>Reject caption</caption>
             <category>Display</category>
@@ -75,7 +75,7 @@
         <property key="message" type="translatableString" required="false">
             <caption>Init Message</caption>
             <category>Display</category>
-            <description>The message that gets displayed before any files are dropped.</description>            
+            <description>The message that gets displayed before any files are dropped.</description>
             <translations>
                 <translation lang="en_US">Click here, or drop files here to upload.</translation>
                 <translation lang="nl_NL">Klik hier, of sleep bestanden hierheen om te uploaden.</translation>

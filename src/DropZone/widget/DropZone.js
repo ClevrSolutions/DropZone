@@ -5,19 +5,20 @@
     DropZone
     ========================
     @file      : Dropzone.js
-    @version   : 4.0.5
+    @version   : 4.0.6
     @author    : Andries Smit & Chris de Gelder
-    @date      : 06-09-2017 
+    @date      : 06-09-2017
     @license   : Apache V2
 
     Documentation
     ========================
     Drop multiple images or documents and upload.
-	Mendix 7.12 version.
-	- 8-3-2018 mxui.dom. functions replaced with domConstruct.create
-	- 8-3-2018 Merge csrftoken (Thanks Jelte)
-	- 11-5-2018 disabled logger messages, bug in 14.1
-    
+    Mendix 7.12 version.
+    - 08-03-2018 mxui.dom. functions replaced with domConstruct.create
+    - 08-03-2018 Merge csrftoken (Thanks Jelte)
+    - 11-05-2018 disabled logger messages, bug in 14.1
+    - 26-09-2018 Fix double upload, Fix "Duplicate column value violates its unique constraint"
+
     To be done:
     - fix, upload button image
     - is relative dimension, width, height.
@@ -29,7 +30,7 @@ define([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
     "dojo/dom-construct",
-	"dojo/on",
+    "dojo/on",
     "dojo/_base/lang",
     "DropZone/widget/lib/dropzone"
 ], function (declare, _WidgetBase, domConstruct, on, dojoLang, Constructdropzone) {
@@ -78,11 +79,11 @@ define([
             logger.debug(this.id + ".update");
             this._contextObj = obj;
             if (callback) {
-				callback();
-			}
+                callback();
+            }
         },
         /**
-         * initalize the dropzone library. 
+         * initalize the dropzone library.
          * @private
          * @returns {undefined}
          */
@@ -90,29 +91,28 @@ define([
             logger.debug(this.id + ".initDropZone");
             domConstruct.empty(this.domNode);
             if (!this.autoUpload) {
-                this.uploadButton = domConstruct.create('button', {
-					type: 'button', 
-					class: 'btn mx-button btn-default', 
+                this.uploadButton = domConstruct.create("button", {
+                    type: "button",
+                    class: "btn mx-button btn-default",
                     icon: "mxclientsystem/mxui/widget/styles/images/MxFileInput/uploading.gif"
                 });
-				this.uploadButton.innerHTML = this.buttoncaption;
-				on(this.uploadButton, "click", dojoLang.hitch(this, this.onclickEvent));
-				logger.debug("button", this.uploadButton, this.buttonCaption);
+                this.uploadButton.innerHTML = this.buttoncaption;
+                on(this.uploadButton, "click", dojoLang.hitch(this, this.onclickEvent));
                 this.domNode.appendChild(this.uploadButton);
             }
-			var height = this.panelheight + " px";
-			var width = this.panelwidth  + " px";
-			if (this.autosize) {
-				height = "100%";
-				width = "100%";
-			}
+            var height = this.panelheight + " px";
+            var width = this.panelwidth  + " px";
+            if (this.autosize) {
+                height = "100%";
+                width = "100%";
+            }
             this.domNode.appendChild(domConstruct.create("div", {
                 "id": this.id + "_zone",
                 "class": "dropzone",
                 "style": "height: " + height + "; width: " + width + ";"
             }));
             this.dropzone = new Constructdropzone("#" + this.id + "_zone", {
-                autoDiscover: false, 
+                autoDiscover: false,
                 maxFilesize: this.maxFileSize,
                 url: dojoLang.hitch(this, this.getMendixURL),
                 paramName: "blob",
@@ -121,38 +121,37 @@ define([
                 dictDefaultMessage: this.message,
                 accept: dojoLang.hitch(this, this.accept),
                 parallelUploads: this.parallelUploads,
-				headers: {
-					'X-Csrf-Token': mx.session.getConfig('csrftoken'),
-					'X-Requested-With': 'XMLHttpRequest'
-				}
+                headers: {
+                    "X-Csrf-Token": mx.session.getConfig("csrftoken"),
+                    "X-Requested-With": "XMLHttpRequest"
+                }
             });
             this.dropzone.on("success", dojoLang.hitch(this, this.onComplete));
             this.dropzone.on("error", dojoLang.hitch(this, this.onError));
             this.dropzone.on("removedfile", dojoLang.hitch(this, this.onRemoveFile));
-			this.dropzone.on("sending", dojoLang.hitch(this, this.addFormData));
+            this.dropzone.on("sending", dojoLang.hitch(this, this.addFormData));
             logger.debug(this.id + ".initDropZone done");
         },
         /**
-         * add Mendix 7 'data' part to formdata
+         * add Mendix 7 "data" part to formdata
          * @param {data[]} files
-		 * @param {xhr} XMLhttprequest
-		 * @param {formData} dropzone.js created formdata
-         * @returns added formData 
-        */		
-		addFormData: function(data, xhr, formData) {
-			// Mendix 7 expects a data part.
-			var s = '{"changes":{},"objects":[]}';
-			formData.append("data", s);
-			//formData.append("data", JSON.stringify( { changes: {}, objects: [] }));			
-		},
+         * @param {xhr} XMLhttprequest
+         * @param {formData} dropzone.js created formdata
+         * @returns added formData
+        */
+        addFormData: function(data, xhr, formData) {
+            // Mendix 7 expects a data part.
+            var data = { "changes": {}, "objects": [] };
+            formData.append("data", JSON.stringify(data));
+        },
         /**
          * set the Mendix upload URL based on the GUID
          * @param {file[]} files
-         * @returns {String} url - mendix server URL to post the file to.s 
+         * @returns {String} url - mendix server URL to post the file to.s
         */
         getMendixURL: function (files) {
             logger.debug(this.id + ".getMendixURL");
-            return "/file?guid=" + files[0].obj.getGuid() + "&maxFileSize=" + this.maxFileSize + "&height=75&width=100";
+            return "/file?guid=" + files[0].obj.getGuid() + "&height=75&width=100";
         },
         /**
          * on error remove the files.
@@ -170,34 +169,34 @@ define([
          * @param {type} message - status message
          * @returns {undefined}
          */
-		onRemoveFile: function (file, message) {
+        onRemoveFile: function (file, message) {
             if (this._beingDestroyed) {
                 // dont remove the files when the widget is being destroyed by the uninitialize function.
                 return;
             }
             logger.debug(this.id + ".onRemoveFile");
             var obj = file.obj;
-			// if autoremoveafter upload is enabled the removefile is called but should not remove the file from the Mendix application
-			if (!file.deleteAfterUpload) {
-				if (obj && this.onRemove) {
-					mx.data.action({
-						params: {
-							actionname: this.onRemove,
-							applyto: "selection",
-							guids: [obj.getGuid()]
-						},
-						origin: this.mxform,
-						callback: dojoLang.hitch(this, function (result) {
-							file.obj = null;
-						}),
-						error: function (e) {
-							logger.error("onRemoveFile", e);
-						}
-					});
-				} else {
-					this.removeFile(file);
-				}
-			}
+            // if autoremoveafter upload is enabled the removefile is called but should not remove the file from the Mendix application
+            if (!file.deleteAfterUpload) {
+                if (obj && this.onRemove) {
+                    mx.data.action({
+                        params: {
+                            actionname: this.onRemove,
+                            applyto: "selection",
+                            guids: [obj.getGuid()]
+                        },
+                        origin: this.mxform,
+                        callback: dojoLang.hitch(this, function (result) {
+                            file.obj = null;
+                        }),
+                        error: function (e) {
+                            logger.error("onRemoveFile", e);
+                        }
+                    });
+                } else {
+                    this.removeFile(file);
+                }
+            }
         },
         /**
          * when uploadload is completed, commit and call onchange MF
@@ -213,18 +212,18 @@ define([
                     callback: dojoLang.hitch(this, function () {
                         logger.debug("onComplete");
                         this.callOnChange(file.obj);
-						if (this.removeAfterUpload) {
-							file.deleteAfterUpload = true;
-							this.dropzone.removeFile(file);
-						}
+                        if (this.removeAfterUpload) {
+                            file.deleteAfterUpload = true;
+                            this.dropzone.removeFile(file);
+                        }
                     })
                 });
             }
             if (!this.autoUpload) {
-				this.dropzone.processQueue(); 
-			}
+                this.dropzone.processQueue();
+            }
         },
-		
+
         /**
          * Create file on mendix server, and validate if it could be accepted.
          * @param {File} file - the file that validate
@@ -232,8 +231,20 @@ define([
          * @returns {undefined}
          */
         accept: function (file, callback) {
-            this.createMendixFile(file, dojoLang.hitch(this, function () {
-                this.acceptMendix(file, callback);
+            this.createMendixFile(file, dojoLang.hitch(this, function(obj) {
+                if (obj) {
+                    var ref = this.contextassociation.split("/");
+                    if (obj.has(ref[0]) && this._contextObj) {
+                        obj.set(ref[0], this._contextObj.getGuid());
+                    }
+                    obj.set(this.nameattr, file.name);
+                    if (this.typeattr) {
+                        obj.set(this.typeattr, file.type);
+                    }
+                    this.acceptMendix(file, callback);
+                } else {
+                    callback("Failed to create new file object");
+                }
             }));
         },
         /**
@@ -277,35 +288,26 @@ define([
          */
         createMendixFile: function (file, callback) {
             logger.debug(this.id + ".createMendixFile", file.name);
-
             mx.data.create({
                 entity: this.imageentity,
                 callback: dojoLang.hitch(this, function (obj) {
-					logger.debug('create', obj);
-                    var ref = this.contextassociation.split("/");
-                    if (obj.has(ref[0]) && this._contextObj) {
-                        obj.set(ref[0], this._contextObj.getGuid());
-                    }
-                    obj.set(this.nameattr, file.name);
-                    if (this.typeattr) {
-                        obj.set(this.typeattr, file.type);
-                    }
+                    logger.debug("create", obj.getGuid());
                     file.obj = obj;
-					logger.debug('save document');
-					mx.data.saveDocument(
-						file.obj.getGuid(), 
-						file.obj.name, 
-						{ width: 100, height: 75 }, 
-						file, 
-						function(obj) {
-							logger.debug('save succes', obj); 
-							// call callback when done
-							callback();
-						}, function(e) {
-							logger.debug('save error', e); 
-							callback();
-					});		 
-						
+                    logger.debug("save document");
+                    // We have commit the created file,
+                    // else the upload by URL will not work
+                    mx.data.commit({
+                        mxobj: file.obj,
+                        callback: function() {
+                            logger.debug("Creation success");
+                            // call callback when done
+                            callback(obj);
+                        },
+                        function(commitError) {
+                            logger.debug("save error", commitError);
+                            callback();
+                        }
+                    });
                 }),
                 error: function () {
                     logger.error("failed createMendixFile");
@@ -325,12 +327,12 @@ define([
                     guid: file.obj.getGuid(),
                     callback: function () {
                         mx.data.update({
-							entity: file.obj.getEntity()
-						}); 
+                            entity: file.obj.getEntity()
+                        });
                         file.obj = null;
                     },
                     error: function (err) {
-                        logger.debug("Error occurred attempting to remove object " + err);
+                        logger.debug("Error occurred attempting to remove object ", err);
                     }
                 });
             }
@@ -341,11 +343,11 @@ define([
          */
         onclickEvent: function () {
             logger.debug(this.id + ".onclickEvent");
-            this.dropzone.processQueue(); 
-			logger.debug('dz', this.dropzone.getQueuedFiles()); 
+            this.dropzone.processQueue();
+            logger.debug(this.id, this.dropzone.getQueuedFiles());
         },
         /**
-         * Call onchange Miroflow if any. 
+         * Call onchange Miroflow if any.
          * @param {mendix/lib/MxObject} obj
          * @returns {undefined}
          */
@@ -366,7 +368,7 @@ define([
                         logger.error("callOnChange", e);
                     }
                 });
-			}
+            }
         },
         /**
          * mxui.widget._WidgetBase.uninitialize is called when the widget is destroyed. Implement to do special tear-down work.

@@ -1,12 +1,11 @@
 {
   "name": "DropZone",
-  "version": "4.0.2",
+  "version": "4.0.6",
   "description": "Drop multiple images or documents and upload",
   "license": "",
   "author": "",
   "private": true,
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.0.0",
