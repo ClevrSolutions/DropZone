@@ -1,4 +1,5 @@
 // Uses AMD or browser globals to create a jQuery plugin.
+// Note change error handling to get description
 (function (factory) {
   if (typeof define === 'function' && define.amd) {
       // AMD. Register as an anonymous module.
@@ -344,6 +345,8 @@
           file.previewElement.classList.add("dz-error");
           if (typeof message !== "String" && message.error) {
             message = message.error;
+          } else if (typeof message !== "String" && message.description) {
+            message = message.description;
           }
           _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
           _results = [];
