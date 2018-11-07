@@ -37,6 +37,11 @@
             <category>Settings</category>
             <description>Maximum file size in MB</description>
         </property>
+        <property key="maxFileCount" type="integer" defaultValue="0">
+            <caption>Max files</caption>
+            <category>Settings</category>
+            <description>Maximum number of files to upload, if > 0</description>
+        </property>		
         <property key="panelheight" type="integer" defaultValue="200">
             <caption>Height</caption>
             <category>Settings</category>
