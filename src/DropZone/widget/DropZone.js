@@ -5,7 +5,7 @@
     DropZone
     ========================
     @file      : Dropzone.js
-    @version   : 4.0.6
+    @version   : 4.0.7
     @author    : Andries Smit & Chris de Gelder
     @date      : 06-09-2017
     @license   : Apache V2
