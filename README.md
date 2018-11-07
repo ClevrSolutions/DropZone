@@ -12,6 +12,9 @@ Credits to: http://www.dropzonejs.com/
 **History**
 
 Update 3.0.2: css loading on linux and Mendix cloud
+07-11-2018 Fix for unique column constraint violation (Thanks to Andries Smit)
+07-11-2018 Maximum number of file limitation added.
+
 
 **Typical usage scenario**
 
