@@ -686,7 +686,19 @@
                   _this.hiddenFileInput.click();
                 }
                 return true;
-              }
+              },
+              /*
+              // scb fix for iOS8
+              // it was supposed to be fixed in https://github.com/enyo/dropzone/issues/935 release 4.1.1
+              // yet in 4.3.0 it doesn't work anymore so I added the touchstart and stopPropagation
+              */
+              "touchstart": function(evt) {
+                evt.stopPropagation();
+                if ((clickableElement !== _this.element) || (evt.target === _this.element || Dropzone.elementInside(evt.target, _this.element.querySelector(".dz-message")))) {
+                  _this.hiddenFileInput.click();
+                }
+                return true;
+              } 
             }
           });
         };
